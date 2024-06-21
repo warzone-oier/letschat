@@ -30,5 +30,6 @@ public class Main{
 			System.out.println("启动端口监听失败");
 			return;
 		}
+		while(true);
 	}
 }

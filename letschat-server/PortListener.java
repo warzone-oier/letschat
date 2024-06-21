@@ -23,12 +23,15 @@ public class PortListener extends Thread{
 			try{
 				Socket socket=server_socket.accept();
 				boolean exception=false;
+				Client client=null;
 				try{
-					list.add(new Client(socket,keypair));
+					client=new Client(socket, keypair);
+					
 				}catch(Exception e){
 					exception=true;
 				}
-				if(!exception) list.get(top++).start();
+				list.add(client);++top;
+				if(exception==false) client.start();
 			}catch(Exception e){
 				e.printStackTrace();
 				return;

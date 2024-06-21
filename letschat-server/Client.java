@@ -9,7 +9,7 @@ public class Client extends Thread{
 		if(network.connect(s)) throw new Exception();
 	}
 	public void run(){
-		try {
+		try{
 			network.send("F");
 		} catch (IOException e) {
 			e.printStackTrace();

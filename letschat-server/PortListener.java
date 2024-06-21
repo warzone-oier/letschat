@@ -24,7 +24,7 @@ public class PortListener extends Thread{
 				Socket socket=server_socket.accept();
 				boolean exception=false;
 				try{
-					list.add(top,new Client(socket,keypair));
+					list.add(new Client(socket,keypair));
 				}catch(Exception e){
 					exception=true;
 				}

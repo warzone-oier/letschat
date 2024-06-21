@@ -23,7 +23,7 @@ public class Network{//通信类，用于 socket 的加密通信
 			byte[] code=keypair.getPublic().getEncoded();
 			output.writeUTF(Base64.getEncoder().encodeToString(code));
 			System.out.println(code);
-			output.writeChar('\n');
+			//output.writeChar('\n');
 			byte[] publicKeyBytes=Base64.getDecoder().decode(input.readUTF());
 			System.out.println(publicKeyBytes);
 			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyBytes);
@@ -51,7 +51,7 @@ public class Network{//通信类，用于 socket 的加密通信
 			return;
 		}
 		output.writeUTF(code);
-		output.writeChar('\n');
+		//output.writeChar('\n');
 	}
 	public String receive() throws IOException{//接收信息，若网络中断则抛出异常
 		Cipher cipher;

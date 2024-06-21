@@ -20,9 +20,12 @@ public class Network{//通信类，用于 socket 的加密通信
 			socket=s;
 			input=new DataInputStream(socket.getInputStream());
 			output=new DataOutputStream(socket.getOutputStream());
+			System.out.println("1");
 			output.writeUTF(Base64.getEncoder().encodeToString(keypair.getPublic().getEncoded()));
 			output.writeChar('\n');
+			System.out.println("2");
 			byte[] publicKeyBytes=Base64.getDecoder().decode(input.readUTF());
+			System.out.println("3");
 			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyBytes);
 			KeyFactory keyFactory;
 			try{

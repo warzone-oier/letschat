@@ -27,7 +27,6 @@ public class PortListener extends Thread{
 				Client client=null;
 				try{
 					client=new Client(socket, keypair);
-					
 				}catch(Exception e){
 					exception=true;
 				}

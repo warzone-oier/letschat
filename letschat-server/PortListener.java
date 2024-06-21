@@ -26,7 +26,7 @@ public class PortListener extends Thread{
 				boolean exception=false;
 				Client client=null;
 				try{
-					System.out.println("-1");
+					//System.out.println("-1");
 					client=new Client(socket, keypair);
 				}catch(Exception e){
 					exception=true;

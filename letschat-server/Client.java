@@ -5,13 +5,12 @@ import java.security.KeyPair;
 public class Client extends Thread{
 	Network network;
 	Client(Socket s,KeyPair key) throws IOException{
-		System.out.println("0");
+		network=new Network();
 		try{
 			network.keypair=key;
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		System.out.println("*");
 		if(network.connect(s)) throw new IOException();
 	}
 	public void run(){

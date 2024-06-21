@@ -9,11 +9,11 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import javax.crypto.Cipher;
 public class Network{//通信类，用于 socket 的加密通信
-	KeyPair keypair;
-	PublicKey publickey;
-	Socket socket;
-	DataInputStream input;
-	DataOutputStream output;
+	KeyPair keypair=null;
+	PublicKey publickey=null;
+	Socket socket=null;
+	DataInputStream input=null;
+	DataOutputStream output=null;
 	Network(){}
 	public boolean connect(Socket s){//传入对应的 socket，初始化输入输出流，发生异常返回 true
 		try{

@@ -7,11 +7,12 @@ public class Client extends Thread{
 	Client(Socket s,KeyPair key) throws Exception{
 		network.keypair=key;
 		if(network.connect(s)) throw new Exception();
+		System.out.println("Cilent");
 	}
 	public void run(){
 		try{
 			network.send("F");
-		} catch (IOException e) {
+		}catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

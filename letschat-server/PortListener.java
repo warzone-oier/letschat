@@ -22,7 +22,7 @@ public class PortListener extends Thread{
 		while(true){
 			try{
 				Socket socket=server_socket.accept();
-				System.out.println("get Client");
+				//System.out.println("get Client");
 				boolean exception=false;
 				Client client=null;
 				try{

@@ -66,7 +66,7 @@ public class ShellClient{
 				if(port==-2) port=-1;
 			}
 			try{
-				fail=server.connect(new Socket(address, port));
+				fail=server.connect(new Socket("http://"+address, port));
 			}catch(Exception e){
 				fail=true;
 			}

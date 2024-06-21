@@ -1,5 +1,7 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.KeyFactory;
@@ -20,13 +22,9 @@ public class Network{//通信类，用于 socket 的加密通信
 			socket=s;
 			input=new DataInputStream(socket.getInputStream());
 			output=new DataOutputStream(socket.getOutputStream());
-			String code=Base64.getEncoder().encodeToString(keypair.getPublic().getEncoded());
-			output.writeUTF(code);
-			System.out.println(code);
-			output.writeChar('\n');
-			code=input.readUTF();
-			System.out.println(code);
-			byte[] publicKeyBytes=Base64.getDecoder().decode(code);
+			byte[] code=keypair.getPublic().getEncoded();
+			output.writeUTF(Base64.getEncoder().encodeToString(code));
+			byte[] publicKeyBytes=Base64.getDecoder().decode(input.readUTF());
 			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyBytes);
 			KeyFactory keyFactory;
 			try{
@@ -52,7 +50,6 @@ public class Network{//通信类，用于 socket 的加密通信
 			return;
 		}
 		output.writeUTF(code);
-		output.writeChar('\n');
 	}
 	public String receive() throws IOException{//接收信息，若网络中断则抛出异常
 		Cipher cipher;

@@ -18,7 +18,9 @@ public class Main{
 		while(scan.hasNext()){
 			int port=scan.nextInt();
 			if(port<0||port>=65536) throw new Exception();
-			listeners.add(new PortListener(port,keypair));
+			PortListener listener=new PortListener(port, keypair);
+			listeners.add(listener);
+			listener.start();
 		}
 	}
 	public static void main(String args[]){

@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.Socket;
 import java.util.Scanner;
 
 public class ShellClient{
@@ -64,7 +65,11 @@ public class ShellClient{
 				if(port==-1) System.out.println("无效端口！");
 				if(port==-2) port=-1;
 			}
-			fail=server.connect(address, port);
+			try{
+				fail=server.connect(new Socket(address, port));
+			}catch(Exception e){
+				fail=true;
+			}
 			if(fail) System.out.println("网络有问题");
 		}while(fail);
 	}
@@ -97,6 +102,5 @@ public class ShellClient{
 				connect();
 			}
 		}while(fail);
-
 	}
 }

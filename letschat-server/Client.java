@@ -1,24 +1,13 @@
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Scanner;
+import java.security.KeyPair;
 
 public class Client extends Thread{
-	Socket socket;
-	InputStream input;
-	OutputStream output;
-	Scanner scan;
-	Client(Socket s){
-		s=socket;
-		try {
-			input=s.getInputStream();
-			output=s.getOutputStream();
-			scan=new Scanner(input);
-		}catch (IOException e) {
-			e.printStackTrace();
-		}
+	Network network;
+	Client(Socket s,KeyPair key) throws Exception{
+		network.keypair=key;
+		if(network.connect(s)) throw new Exception();
 	}
 	public void run(){
+		
 	}
 }

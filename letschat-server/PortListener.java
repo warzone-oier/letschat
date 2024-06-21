@@ -1,14 +1,17 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.security.KeyPair;
+import java.util.Vector;
 
 public class PortListener extends Thread{
-	ArrayList<Client> list;
+	Vector<Client> list;
 	ServerSocket server_socket;
+	KeyPair keypair;
 	int top=0;
-	PortListener(int port){
-		list=new ArrayList<Client>();
+	PortListener(int port,KeyPair key){
+		list=new Vector<Client>();
+		keypair=key;
 		try{
 			server_socket=new ServerSocket(port);
 		}catch(IOException e){
@@ -19,8 +22,13 @@ public class PortListener extends Thread{
 		while(true){
 			try{
 				Socket socket=server_socket.accept();
-				list.add(top,new Client(socket));
-				list.get(top++).start();
+				boolean exception=false;
+				try{
+					list.add(top,new Client(socket,keypair));
+				}catch(Exception e){
+					exception=true;
+				}
+				if(!exception) list.get(top++).start();
 			}catch(Exception e){
 				e.printStackTrace();
 				return;

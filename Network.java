@@ -1,7 +1,5 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.KeyFactory;
@@ -11,11 +9,11 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import javax.crypto.Cipher;
 public class Network{//通信类，用于 socket 的加密通信
-	KeyPair keypair=null;
-	PublicKey publickey=null;
-	Socket socket=null;
-	DataInputStream input=null;
-	DataOutputStream output=null;
+	KeyPair keypair;//自身密钥对来自外部
+	private PublicKey publickey;
+	private Socket socket;
+	private DataInputStream input;
+	private DataOutputStream output;
 	Network(){}
 	public boolean connect(Socket s){//传入对应的 socket，初始化输入输出流，发生异常返回 true
 		try{
@@ -24,6 +22,9 @@ public class Network{//通信类，用于 socket 的加密通信
 			output=new DataOutputStream(socket.getOutputStream());
 			byte[] code=keypair.getPublic().getEncoded();
 			output.writeUTF(Base64.getEncoder().encodeToString(code));
+			//writeUTF() 和 readUTF():
+			//前两个字节表示输入输出长度 (unsigned short)，之后为 UTF-8 格式的字符串
+			//适合通信，一次 writeUTF() 唯一对应一次 readUTF()
 			byte[] publicKeyBytes=Base64.getDecoder().decode(input.readUTF());
 			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyBytes);
 			KeyFactory keyFactory;
@@ -38,7 +39,7 @@ public class Network{//通信类，用于 socket 的加密通信
 		}
 		return false;
 	}
-	public void send(String s) throws IOException{//发送信息，若网络中断则抛出异常
+	public synchronized void send(String s) throws IOException{//发送信息，若网络中断则抛出异常
 		Cipher cipher;
 		String code;
 		try{
@@ -51,7 +52,7 @@ public class Network{//通信类，用于 socket 的加密通信
 		}
 		output.writeUTF(code);
 	}
-	public String receive() throws IOException{//接收信息，若网络中断则抛出异常
+	public synchronized String receive() throws IOException{//接收信息，若网络中断则抛出异常
 		Cipher cipher;
 		try{
 			cipher=Cipher.getInstance("RSA");

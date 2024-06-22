@@ -22,6 +22,7 @@ public class Main{
 			listeners.add(listener);
 			listener.start();
 		}
+		scan.close();
 	}
 	public static void main(String args[]){
 		try{

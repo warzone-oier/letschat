@@ -12,11 +12,4 @@ public class Server extends Network{
 			e.printStackTrace();
 		}
 	}
-	public boolean login(String name,String password) throws IOException{
-		String fail;
-		sendString(name);
-		sendString(password);
-		fail=receiveString();
-		return fail.equals("T");
-	}
 }

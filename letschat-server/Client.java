@@ -39,12 +39,12 @@ public class Client extends Thread{
 						return;
 					}else{//注册信息
 
-						
+
 						network.send(out);
 						return;
 					}
 				}
-				byte[] out={Network.captchaFailed};
+				byte[] out={Network.failed};
 				network.send(out);
 				captcha=new Captcha();
 				network.send(captcha.image);

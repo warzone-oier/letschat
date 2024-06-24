@@ -269,12 +269,12 @@ class LoginWindow extends AccountWindow{
 				ClientMain.server.send(name.get());
 				ClientMain.server.send(password.get());
 				byte command=ClientMain.server.receive()[0];
-				if(command==Network.success)
+				if(command==Network.success){
 					sendError("登录成功");
+				}else sendError("用户名或密码错误");
 			}catch(IOException e){
 				StartWindow.setVisble(true);
 			}
-			
 		}
 	}
 }
@@ -297,8 +297,9 @@ class RegisterWindow extends AccountWindow{
 				ClientMain.server.send(name.get());
 				ClientMain.server.send(password.get());
 				byte command=ClientMain.server.receive()[0];
-				if(command==Network.success)
+				if(command==Network.success){
 					sendError("注册成功");
+				}else sendError("用户名已存在");
 			}catch(IOException e){
 				StartWindow.setVisble(true);
 			}

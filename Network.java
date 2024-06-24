@@ -118,7 +118,7 @@ public class Network{
 	static public final byte changeCaptcha=0;
 	static public final byte checkCaptcha=1;
 	static public final byte success=2;
-	static public final byte captchaFailed=3;
+	static public final byte failed=3;
 	static public final byte login=4;
 	static public final byte register=5;
 }

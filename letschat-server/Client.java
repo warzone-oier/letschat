@@ -25,10 +25,10 @@ public class Client extends Thread{
 	public void run(){
 		while(true){
 			try{
-				String command=network.receive();
+				String command=network.receiveString();
 				if(command=="text"){
-					String chat=network.receive();
-					String text=network.receive();
+					String chat=network.receiveString();
+					String text=network.receiveString();
 					user.sendText(chat,text);
 				}
 			}catch(IOException e){

@@ -3,16 +3,11 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.security.SecureRandom;
-
-import javax.imageio.ImageIO;
 public class Captcha{
 	// 随机字符串的字符集
 	private static final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	private static final int length=6,width=160,height=40;
-	private static final Font font=new Font("黑体", Font.PLAIN, 24);
 	private static SecureRandom random=new SecureRandom();
 	String s;
 	BufferedImage image;
@@ -29,9 +24,9 @@ public class Captcha{
 		Graphics2D g = image.createGraphics();
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, width, height);
-		g.setFont(font);
 		// 画出随机字符并进行扭曲
-		for(int i=0;i<length;i++) {
+		for(int i=0;i<length;i++){
+			g.setFont(new Font("Arial", Font.PLAIN, random.nextInt(8)+16));//随机大小
 			AffineTransform originalTransform = g.getTransform();
 			// 生成随机扭曲
 			double rotation=(random.nextDouble()-0.5) * Math.PI/6; // 旋转角度
@@ -64,13 +59,5 @@ public class Captcha{
 	Captcha(){
 		s=generateString();
 		image=generateImage(s);
-	}
-	private static void saveCaptchaImage(BufferedImage image, String filePath) {
-		File outputfile = new File(filePath);
-		try {
-			ImageIO.write(image, "png", outputfile);
-		} catch (IOException e) {
-			System.out.println("Error saving captcha image: " + e.getMessage());
-		}
 	}
 }

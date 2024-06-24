@@ -1,17 +1,9 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.KeyPair;
-import java.util.Vector;
-
 public class PortListener extends Thread{
-	Vector<Client> list;
 	ServerSocket server_socket;
-	KeyPair keypair;
-	int top=0;
-	PortListener(int port,KeyPair key){
-		list=new Vector<Client>();
-		keypair=key;
+	PortListener(int port){
 		try{
 			server_socket=new ServerSocket(port);
 		}catch(IOException e){
@@ -27,11 +19,10 @@ public class PortListener extends Thread{
 				Client client=null;
 				try{
 					//System.out.println("-1");
-					client=new Client(socket, keypair);
+					client=new Client(socket,Main.keypair);
 				}catch(Exception e){
 					exception=true;
 				}
-				list.add(client);++top;
 				if(exception==false) client.start();
 			}catch(Exception e){
 				e.printStackTrace();

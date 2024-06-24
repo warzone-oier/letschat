@@ -1,3 +1,7 @@
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,6 +12,7 @@ import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import javax.crypto.Cipher;
+import javax.imageio.ImageIO;
 public class Network{//通信类，用于 socket 的加密通信
 	KeyPair keypair;//自身密钥对来自外部
 	private PublicKey publickey;
@@ -52,34 +57,50 @@ public class Network{//通信类，用于 socket 的加密通信
 		publickey=null;
 		return false;
 	}
-	public synchronized void send(String s) throws IOException{//发送信息，若网络中断则抛出异常
+	public synchronized void send(byte s[]) throws IOException{//发送信息，若网络中断则抛出异常
 		Cipher cipher;
 		String code;
 		try{
 			cipher = Cipher.getInstance("RSA");
 			cipher.init(Cipher.ENCRYPT_MODE,publickey);
-			code=Base64.getEncoder().encodeToString(cipher.doFinal(s.getBytes()));
+			code=Base64.getEncoder().encodeToString(cipher.doFinal(s));
 		}catch(Exception e){
 			e.printStackTrace();
 			return;
 		}
 		output.writeUTF(code);
 	}
-	public synchronized String receive() throws IOException{//接收信息，若网络中断则抛出异常
+	public synchronized byte[] receive() throws IOException{//接收信息，若网络中断则抛出异常
 		Cipher cipher;
 		try{
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
 		}catch(Exception e){
 			e.printStackTrace();
-			return "";
+			return null;
 		}
 		String code=input.readUTF();
 		try{
-			code=new String(cipher.doFinal(Base64.getDecoder().decode(code)));
+			return cipher.doFinal(Base64.getDecoder().decode(code));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return code;
+		return null;
+	}
+	public synchronized void sendString(String s) throws IOException{//发送字符串
+		send(s.getBytes());
+	}
+	public synchronized String receiveString() throws IOException{//接收字符串
+		return new String(receive());
+	}
+	public synchronized void send(BufferedImage image) throws IOException{//发送图片
+		ByteArrayOutputStream bout=new ByteArrayOutputStream();
+		ImageIO.write(image,"png",bout);
+		send(bout.toByteArray());
+	}
+	public synchronized BufferedImage receiveImage() throws IOException{//接收图片
+		byte[] s=receive();
+		ByteArrayInputStream bin=new ByteArrayInputStream(s);
+		return ImageIO.read(bin);
 	}
 }

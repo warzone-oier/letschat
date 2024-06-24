@@ -14,9 +14,9 @@ public class Server extends Network{
 	}
 	public boolean login(String name,String password) throws IOException{
 		String fail;
-		send(name);
-		send(password);
-		fail=receive();
+		sendString(name);
+		sendString(password);
+		fail=receiveString();
 		return fail.equals("T");
 	}
 }

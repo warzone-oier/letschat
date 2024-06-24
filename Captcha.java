@@ -19,7 +19,7 @@ public class Captcha{
 		}
         return s.toString();
     }
-	private static BufferedImage generateImage(String s) {
+	private static BufferedImage generateImage(String s){
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = image.createGraphics();
 		g.setColor(Color.WHITE);

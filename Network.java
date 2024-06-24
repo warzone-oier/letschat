@@ -137,12 +137,7 @@ public class Network{
 	}
 	/**接收图片 */
 	public synchronized BufferedImage receiveImage() throws IOException{
-		byte[] s={};
-		try{
-			s=receive();
-		}catch(IOException e){
-			e.printStackTrace();
-		}
+		byte[] s=receive();
 		ByteArrayInputStream bin=new ByteArrayInputStream(s);
 		return ImageIO.read(bin);
 	}

@@ -15,6 +15,12 @@ public class Client extends Thread{
 			e.printStackTrace();
 		}
 		if(network.connect(s)) throw new IOException();
+		try{
+			network.send("I'm Server");
+			System.out.println(network.receiveString());
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 		captcha=new Captcha();
 		network.send(captcha.image);
 	}

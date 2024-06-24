@@ -67,14 +67,14 @@ public class Network{
 		Cipher cipher;
 		String code;
 		try{
-			cipher=Cipher.getInstance("RSA");
-			cipher.init(Cipher.ENCRYPT_MODE,publickey);
 			final int block=(s.length-1)/cryptLength+1;
 			byte out[]=new byte[block*256];
 			for(int i=0;i<block;++i){//分段加密
 				byte now[]=new byte[i==block-1? s.length-i*cryptLength:cryptLength];
 				for(int j=0;j<cryptLength&&i*cryptLength+j<s.length;++j)
 					now[j]=s[i*cryptLength+j];
+				cipher=Cipher.getInstance("RSA");
+				cipher.init(Cipher.ENCRYPT_MODE,publickey);
 				now=cipher.doFinal(now);
 				for(int j=0;j<256;++j)
 					out[i*256+j]=now[j];
@@ -89,13 +89,6 @@ public class Network{
 	/**接收信息，若网络中断则抛出异常*/
 	public synchronized byte[] receive() throws IOException{
 		Cipher cipher;
-		try{
-			cipher=Cipher.getInstance("RSA");
-			cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
-		}catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
 		String code=input.readUTF();
 		try{//分段解密
 			byte s[]=Base64.getDecoder().decode(code);
@@ -103,6 +96,8 @@ public class Network{
 			byte now[]=new byte[256];
 			for(int i=0;i<256;++i)
 				now[i]=s[(block-1)*256+i];
+			cipher=Cipher.getInstance("RSA");
+			cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
 			now=cipher.doFinal(now);
 			byte out[]=new byte[(block-1)*256+now.length];
 			for(int i=0;i<now.length;++i)
@@ -111,6 +106,8 @@ public class Network{
 				now=new byte[256];
 				for(int j=0;j<256;++j)
 					now[j]=s[i*256+j];
+				cipher=Cipher.getInstance("RSA");
+				cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
 				now=cipher.doFinal(now);
 				for(int j=0;j<cryptLength;++j)
 					out[i*cryptLength+j]=now[j];
@@ -118,8 +115,8 @@ public class Network{
 			return out;
 		}catch(Exception e){
 			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 	/**发送字符串 */
 	public synchronized void send(String s) throws IOException{
@@ -139,7 +136,8 @@ public class Network{
 	public synchronized BufferedImage receiveImage() throws IOException{
 		byte[] s=receive();
 		ByteArrayInputStream bin=new ByteArrayInputStream(s);
-		return ImageIO.read(bin);
+		BufferedImage out=ImageIO.read(bin);
+		return out;
 	}
 
 	//以下是发送的命令表

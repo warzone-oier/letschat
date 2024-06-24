@@ -1,4 +1,4 @@
-import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -190,7 +190,7 @@ class CaptchaText extends Text implements ActionListener{
 		byte[] command={Network.changeCaptcha};
 		try{
 			ClientMain.server.send(command);
-			label.setIcon((Icon)(ClientMain.server.receiveImage()));
+			label.setIcon(new ImageIcon(ClientMain.server.receiveImage()));
 		}catch(IOException e1){
 			StartWindow.setVisble(true);
 		}
@@ -203,7 +203,7 @@ class CaptchaText extends Text implements ActionListener{
 			ClientMain.server.send(get());
 			command=ClientMain.server.receive();
 			if(command[0]==Network.success) return true;
-			label.setIcon((Icon)ClientMain.server.receiveImage());
+			label.setIcon(new ImageIcon(ClientMain.server.receiveImage()));
 			return false;
 		}catch(IOException e1){
 			StartWindow.setVisble(true);
@@ -221,7 +221,7 @@ abstract class AccountWindow extends Panel implements ActionListener{
 		JPasswordField field=new JPasswordField();
 		field.setEchoChar('*');
 		password=new Text(line[2], font, "密码",field,32);
-		captcha=new CaptchaText(line[length-4],font,"验证码",new JTextField(),32);
+		captcha=new CaptchaText(line[length-4],font,"验证码",new JTextField(),10);
 		confirm=new JButton(title);
 		cancel=new JButton("取消");
 		error.setFont(font);
@@ -237,8 +237,8 @@ abstract class AccountWindow extends Panel implements ActionListener{
 	public boolean setVisible(boolean aflag){
 		if(aflag){
 			try{
-				captcha.label.setIcon((Icon)
-					ClientMain.server.receiveImage());
+				captcha.label.setIcon(new ImageIcon(
+					ClientMain.server.receiveImage()));
 			}catch(IOException e){
 				return true;
 			}

@@ -39,6 +39,19 @@ public class Network{//通信类，用于 socket 的加密通信
 		}
 		return false;
 	}
+	public boolean endconnect(){
+		try{input.close();}
+		catch(IOException e){}
+		try{output.close();
+		}catch(IOException e){}
+		try{socket.close();}
+		catch(IOException e){}
+		input=null;
+		output=null;
+		socket=null;
+		publickey=null;
+		return false;
+	}
 	public synchronized void send(String s) throws IOException{//发送信息，若网络中断则抛出异常
 		Cipher cipher;
 		String code;

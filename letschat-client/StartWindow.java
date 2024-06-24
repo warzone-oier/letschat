@@ -21,10 +21,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.text.ParseException;
 abstract class Panel{//单个面板
-	private JPanel frame;
+	protected JPanel frame;
 	JPanel line[];
 	JLabel error;
-	protected void init(JFrame f,int size){
+	Panel(JFrame f,int size){
 		frame=new JPanel();
 		frame.setBounds(0, 0, 400, 300);
 		frame.setLayout(new GridLayout(size,1));
@@ -42,10 +42,7 @@ abstract class Panel{//单个面板
 		error.setText(s);
 		error.setVisible(true);
 	}
-	public void setVisible(boolean aflag){
-		frame.setVisible(aflag);
-		error.setVisible(!aflag);
-	}
+	abstract public void setVisible(boolean aflag);
 };
 class Text{//带有标签的输入框
 	private JLabel label;
@@ -70,7 +67,7 @@ class HelloWindow extends Panel implements ActionListener{
 	static Text ip,port;
 	static JButton login,register;
 	HelloWindow(JFrame f,Font font){
-		init(f,6);
+		super(f,6);
 		MaskFormatter ipformatter,portformatter;
 		try{
 			ipformatter=new MaskFormatter("###.###.###.###");
@@ -126,6 +123,10 @@ class HelloWindow extends Panel implements ActionListener{
 			out=out*10+(s.charAt(i)-'0');
 		return out;
 	}
+	public void setVisible(boolean aflag){
+		frame.setVisible(aflag);
+		error.setVisible(!aflag);
+	}
 	public void actionPerformed(ActionEvent e){
 		Socket s;
 		try{
@@ -161,16 +162,27 @@ class HelloWindow extends Panel implements ActionListener{
 		}
 	}
 }
+
+class CaptchaText extends Text{//验证码的专门输入框
+	JLabel label;
+	JButton change;
+	CaptchaText(JPanel panel,Font font,String title,JTextField field,int column) {
+		super(panel,font,title,field,column);
+
+	}
+	
+}
 class LoginWindow extends Panel implements ActionListener{
-	static Text name,password,captcha;
+	static Text name,password;
+	static CaptchaText captcha;
 	JButton login,cancel;
 	LoginWindow(JFrame f,Font font){
-		init(f, 7);
+		super(f, 7);
 		name=new Text(line[1], font, "用户名",new JTextField(),32);
 		JPasswordField field=new JPasswordField();
 		field.setEchoChar('*');
 		password=new Text(line[2], font, "密码",field,32);
-		captcha=new Text(line[3],font,"验证码",new JTextField(),32);
+		captcha=new CaptchaText(line[3],font,"验证码",new JTextField(),32);
 		login=new JButton("登录");
 		cancel=new JButton("取消");
 		error.setFont(font);
@@ -181,6 +193,10 @@ class LoginWindow extends Panel implements ActionListener{
 		line[5].add(cancel);
 		login.addActionListener(this);
 		cancel.addActionListener(this);
+	}
+	public void setVisible(boolean aflag){
+		frame.setVisible(aflag);
+		error.setVisible(!aflag);
 	}
 	public void actionPerformed(ActionEvent e){
 		if((JButton)(e.getSource())==cancel){//取消
@@ -203,17 +219,18 @@ class LoginWindow extends Panel implements ActionListener{
 	}
 }
 class RegisterWindow extends Panel implements ActionListener{
-	static Text name,password,repeat,captcha;
+	static Text name,password,repeat;
+	static CaptchaText captcha;
 	JButton register,cancel;
 	RegisterWindow(JFrame f,Font font){
-		init(f, 8);
+		super(f, 8);
 		name=new Text(line[1], font, "用户名",new JTextField(),32);
 		JPasswordField field1=new JPasswordField(),field2=new JPasswordField();
 		field1.setEchoChar('*');
 		field2.setEchoChar('*');
 		password=new Text(line[2], font, "密码",field1,32);
 		repeat=new Text(line[3], font, "确认密码",field2,32);
-		captcha=new Text(line[4],font,"验证码",new JTextField(),32);
+		captcha=new CaptchaText(line[4],font,"验证码",new JTextField(),10);
 		register=new JButton("注册");
 		cancel=new JButton("取消");
 		error.setFont(font);
@@ -224,6 +241,10 @@ class RegisterWindow extends Panel implements ActionListener{
 		line[6].add(cancel);
 		register.addActionListener(this);
 		cancel.addActionListener(this);
+	}
+	public void setVisible(boolean aflag){
+		frame.setVisible(aflag);
+		error.setVisible(!aflag);
 	}
 	public void actionPerformed(ActionEvent e){
 		if((JButton)(e.getSource())==cancel){//取消

@@ -19,6 +19,7 @@ public class Network{
 	private Socket socket;
 	private DataInputStream input;
 	private DataOutputStream output;
+	private final int cryptLength=240;
 	Network(){}
 	/**传入对应的 socket，初始化输入输出流，发生异常返回 true*/
 	public boolean connect(Socket s){
@@ -68,7 +69,17 @@ public class Network{
 		try{
 			cipher = Cipher.getInstance("RSA");
 			cipher.init(Cipher.ENCRYPT_MODE,publickey);
-			code=Base64.getEncoder().encodeToString(cipher.doFinal(s));
+			final int block=(s.length-1)/cryptLength+1;
+			byte out[]=new byte[block*256];
+			for(int i=0;i<block;++i){//分段加密
+				byte now[]=new byte[i==block-1? s.length-i*cryptLength:cryptLength];
+				for(int j=0;j<cryptLength&&i*cryptLength+j<s.length;++j)
+					now[j]=s[i*cryptLength+j];
+				now=cipher.doFinal(now);
+				for(int j=0;j<256;++j)
+					out[i*256+j]=now[j];
+			}
+			code=Base64.getEncoder().encodeToString(out);
 		}catch(Exception e){
 			e.printStackTrace();
 			return;
@@ -87,7 +98,24 @@ public class Network{
 		}
 		String code=input.readUTF();
 		try{
-			return cipher.doFinal(Base64.getDecoder().decode(code));
+			byte s[]=Base64.getDecoder().decode(code);
+			final int block=s.length>>8;
+			byte now[]=new byte[256];
+			for(int i=0;i<256;++i)
+				now[i]=s[(block-1)*256+i];
+			now=cipher.doFinal(now);
+			byte out[]=new byte[(block-1)*256+now.length];
+			for(int i=0;i<now.length;++i)
+				out[(block-1)*256+i]=now[i];
+			for(int i=0;i<block-1;++i){
+				now=new byte[256];
+				for(int j=0;j<256;++j)
+					now[j]=s[i*256+j];
+				now=cipher.doFinal(now);
+				for(int j=0;j<cryptLength;++j)
+					out[i*cryptLength+j]=now[j];
+			}
+			return cipher.doFinal(s);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

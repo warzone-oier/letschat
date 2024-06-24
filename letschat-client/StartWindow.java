@@ -160,8 +160,16 @@ class HelloWindow extends Panel implements ActionListener{
 		}
 		setVisible(false);
 		if((JButton)(e.getSource())==login){//登录事件
-			if(StartWindow.login.setVisible(true)) setVisible(true);
-		}else if(StartWindow.register.setVisible(true)) setVisible(true);
+			if(StartWindow.login.setVisible(true)){
+				setVisible(true);
+				sendError("网络异常，请稍后再试");
+				ClientMain.server.disconnect();
+			}
+		}else if(StartWindow.register.setVisible(true)){
+			setVisible(true);
+			sendError("网络异常，请稍后再试");
+			ClientMain.server.disconnect();
+		}
 	}
 }
 /**验证码的专门输入框 */
@@ -244,7 +252,7 @@ abstract class AccountWindow extends Panel implements ActionListener{
 		if((JButton)(e.getSource())==cancel){//取消
 			setVisible(false);
 			StartWindow.hello.setVisible(true);
-			ClientMain.server.endconnect();
+			ClientMain.server.disconnect();
 			return;
 		}
 		if(name.get().equals(""))

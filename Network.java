@@ -46,7 +46,7 @@ public class Network{
 		}
 		return false;
 	}
-	public boolean endconnect(){
+	public boolean disconnect(){
 		try{input.close();}
 		catch(IOException e){
 			return true;}
@@ -67,7 +67,7 @@ public class Network{
 		Cipher cipher;
 		String code;
 		try{
-			cipher = Cipher.getInstance("RSA");
+			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.ENCRYPT_MODE,publickey);
 			final int block=(s.length-1)/cryptLength+1;
 			byte out[]=new byte[block*256];
@@ -97,7 +97,7 @@ public class Network{
 			return null;
 		}
 		String code=input.readUTF();
-		try{
+		try{//分段解密
 			byte s[]=Base64.getDecoder().decode(code);
 			final int block=s.length>>8;
 			byte now[]=new byte[256];
@@ -115,7 +115,7 @@ public class Network{
 				for(int j=0;j<cryptLength;++j)
 					out[i*cryptLength+j]=now[j];
 			}
-			return cipher.doFinal(s);
+			return out;
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -137,7 +137,12 @@ public class Network{
 	}
 	/**接收图片 */
 	public synchronized BufferedImage receiveImage() throws IOException{
-		byte[] s=receive();
+		byte[] s={};
+		try{
+			s=receive();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 		ByteArrayInputStream bin=new ByteArrayInputStream(s);
 		return ImageIO.read(bin);
 	}

@@ -274,11 +274,8 @@ class LoginWindow extends AccountWindow{
 		super(f,font,7,"登录");
 	}
 	protected void Confirm() throws IOException{
-		if(!captcha.check()){
-			sendError("验证码错误");
-			captcha.label.setIcon(new ImageIcon(ClientMain.server.receiveImage()));
-		}else{
-			System.out.println("***");
+		if(!captcha.check()) sendError("验证码错误");
+		else{
 			try{
 				byte[] out={Network.login};
 				ClientMain.server.send(out);
@@ -305,10 +302,9 @@ class RegisterWindow extends AccountWindow{
 	protected void Confirm() throws IOException{
 		if(!password.get().equals(repeat.get()))
 			sendError("两次输入密码不相同");
-		else if(!captcha.check()){
+		else if(!captcha.check())
 			sendError("验证码错误");
-			captcha.label.setIcon(new ImageIcon(ClientMain.server.receiveImage()));
-		}else{
+		else{
 			try{
 				byte[] out={Network.login};
 				ClientMain.server.send(out);

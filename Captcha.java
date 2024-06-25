@@ -60,17 +60,16 @@ public class Captcha{
 		s=generateString();
 		image=generateImage(s);
 	}
-	private String vague(String s){
-		StringBuilder out=new StringBuilder(s.length());
-		for(int i=0;i<s.length();++i){
-			if(s.charAt(i)=='I'||s.charAt(i)=='1') out.append('l');
-			else if('A'<=s.charAt(i)&&s.charAt(i)<='Z')
-				out.append(s.charAt(i)-'A'+'a');
-			else out.append(s.charAt(i));
-		}
-		return out.toString();
-	}
 	public boolean check(String get){
-		return vague(get).equals(vague(s));
+		if(s.length()!=get.length()) return false;
+		for(int i=0;i<s.length();++i){
+			char a=s.charAt(i),b=get.charAt(i);
+			if(a=='I'||a=='l') a='1';
+			else if('A'<=a&&a<='Z') a=(char)(a-'A'+'a');
+			if(b=='I'||b=='l') b='1';
+			else if('A'<=b&&b<='Z') b=(char)(b-'A'+'a');
+			if(a!=b) return false;
+		}
+		return true;
 	}
 }

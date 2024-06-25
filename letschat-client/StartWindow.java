@@ -278,6 +278,7 @@ class LoginWindow extends AccountWindow{
 			sendError("验证码错误");
 			captcha.label.setIcon(new ImageIcon(ClientMain.server.receiveImage()));
 		}else{
+			System.out.println("***");
 			try{
 				byte[] out={Network.login};
 				ClientMain.server.send(out);

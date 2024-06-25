@@ -67,14 +67,14 @@ public class Network{
 		Cipher cipher;
 		String code;
 		try{
+			cipher=Cipher.getInstance("RSA");
+			cipher.init(Cipher.ENCRYPT_MODE,publickey);
 			final int block=(s.length-1)/cryptLength+1;
 			byte out[]=new byte[block*256];
 			for(int i=0;i<block;++i){//分段加密
 				byte now[]=new byte[i==block-1? s.length-i*cryptLength:cryptLength];
 				for(int j=0;j<cryptLength&&i*cryptLength+j<s.length;++j)
 					now[j]=s[i*cryptLength+j];
-				cipher=Cipher.getInstance("RSA");
-				cipher.init(Cipher.ENCRYPT_MODE,publickey);
 				now=cipher.doFinal(now);
 				for(int j=0;j<256;++j)
 					out[i*256+j]=now[j];
@@ -91,13 +91,13 @@ public class Network{
 		Cipher cipher;
 		String code=input.readUTF();
 		try{//分段解密
+			cipher=Cipher.getInstance("RSA");
+			cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
 			byte s[]=Base64.getDecoder().decode(code);
 			final int block=s.length>>8;
 			byte now[]=new byte[256];
 			for(int i=0;i<256;++i)
 				now[i]=s[(block-1)*256+i];
-			cipher=Cipher.getInstance("RSA");
-			cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
 			now=cipher.doFinal(now);
 			byte out[]=new byte[(block-1)*256+now.length];
 			for(int i=0;i<now.length;++i)
@@ -106,8 +106,6 @@ public class Network{
 				now=new byte[256];
 				for(int j=0;j<256;++j)
 					now[j]=s[i*256+j];
-				cipher=Cipher.getInstance("RSA");
-				cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
 				now=cipher.doFinal(now);
 				for(int j=0;j<cryptLength;++j)
 					out[i*cryptLength+j]=now[j];

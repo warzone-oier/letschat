@@ -221,7 +221,7 @@ abstract class AccountWindow extends Panel implements ActionListener{
 		JPasswordField field=new JPasswordField();
 		field.setEchoChar('*');
 		password=new Text(line[2], font, "密码",field,32);
-		captcha=new CaptchaText(line[length-4],font,"验证码",new JTextField(),10);
+		captcha=new CaptchaText(line[length-4],font,"验证码",new JTextField(),6);
 		confirm=new JButton(title);
 		cancel=new JButton("取消");
 		error.setFont(font);

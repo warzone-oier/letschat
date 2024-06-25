@@ -47,10 +47,10 @@ public class Captcha{
 		for(int i=0;i<5;++i){
 			g.setColor(new Color(random.nextInt(255),
 				random.nextInt(255),random.nextInt(255)));
-			final int x1 = random.nextInt(width);
-			final int y1 = random.nextInt(height);
-			final int x2 = random.nextInt(width);
-			final int y2 = random.nextInt(height);
+			final int x1=random.nextInt(width);
+			final int y1=random.nextInt(height);
+			final int x2=random.nextInt(width);
+			final int y2=random.nextInt(height);
 			g.drawLine(x1, y1, x2, y2);
 		}
 		g.dispose();
@@ -59,5 +59,18 @@ public class Captcha{
 	Captcha(){
 		s=generateString();
 		image=generateImage(s);
+	}
+	private String vague(String s){
+		StringBuilder out=new StringBuilder(s.length());
+		for(int i=0;i<s.length();++i){
+			if(s.charAt(i)=='I'||s.charAt(i)=='1') out.append('l');
+			else if('A'<=s.charAt(i)&&s.charAt(i)<='Z')
+				out.append(s.charAt(i)-'A'+'a');
+			else out.append(s.charAt(i));
+		}
+		return out.toString();
+	}
+	public boolean check(String get){
+		return vague(get).equals(vague(s));
 	}
 }

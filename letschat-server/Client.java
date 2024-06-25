@@ -26,7 +26,7 @@ public class Client extends Thread{
 				network.send(captcha.image);
 			}else if(command==Network.checkCaptcha){
 				String s=network.receiveString();
-				if(s.equals(captcha.s)){
+				if(captcha.check(s)){
 					byte[] out={Network.success};
 					network.send(out);
 					command=network.receive()[0];

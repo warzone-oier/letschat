@@ -113,6 +113,7 @@ public class Network{
 			return out;
 		}catch(Exception e){
 			e.printStackTrace();
+			System.out.println("error");
 			return null;
 		}
 	}
@@ -133,6 +134,7 @@ public class Network{
 	/**接收图片 */
 	public synchronized BufferedImage receiveImage() throws IOException{
 		byte[] s=receive();
+		if(s==null) System.out.println("***");
 		ByteArrayInputStream bin=new ByteArrayInputStream(s);
 		BufferedImage out=ImageIO.read(bin);
 		return out;

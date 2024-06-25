@@ -1,3 +1,4 @@
+import java.awt.List;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -9,6 +10,7 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.imageio.ImageIO;
@@ -19,7 +21,6 @@ public class Network{
 	private Socket socket;
 	private DataInputStream input;
 	private DataOutputStream output;
-	private final int cryptLength=240;
 	Network(){}
 	/**传入对应的 socket，初始化输入输出流，发生异常返回 true*/
 	public boolean connect(Socket s){
@@ -62,6 +63,20 @@ public class Network{
 		publickey=null;
 		return false;
 	}
+	private byte[] crypt(Cipher cipher,byte s[],int cryptLength) throws Exception{
+		ArrayList<Byte> list=new ArrayList<>();
+		for(int i=0;i<s.length;i+=cryptLength){
+			final int blockSize=Math.min(cryptLength,s.length-i);
+			byte[] block=new byte[blockSize];
+			System.arraycopy(s,i,block, 0, blockSize);
+			block=cipher.doFinal(block);
+			for(byte b:block) list.add(b);
+		}
+		byte[] out=new byte[list.size()];
+		for(int i=0;i<out.length;++i)
+			out[i]=list.get(i);
+		return out;
+	}
 	/**发送信息，若网络中断则抛出异常*/
 	public synchronized void send(byte s[]) throws IOException{
 		Cipher cipher;
@@ -69,17 +84,7 @@ public class Network{
 		try{
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.ENCRYPT_MODE,publickey);
-			final int block=(s.length-1)/cryptLength+1;
-			byte out[]=new byte[block*256];
-			for(int i=0;i<block;++i){//分段加密
-				byte now[]=new byte[i==block-1? s.length-i*cryptLength:cryptLength];
-				for(int j=0;j<cryptLength&&i*cryptLength+j<s.length;++j)
-					now[j]=s[i*cryptLength+j];
-				now=cipher.doFinal(now);
-				for(int j=0;j<256;++j)
-					out[i*256+j]=now[j];
-			}
-			code=Base64.getEncoder().encodeToString(out);
+			code=Base64.getEncoder().encodeToString(crypt(cipher,s,245));
 		}catch(Exception e){
 			e.printStackTrace();
 			return;
@@ -94,26 +99,9 @@ public class Network{
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
 			byte s[]=Base64.getDecoder().decode(code);
-			final int block=s.length>>8;
-			byte now[]=new byte[256];
-			for(int i=0;i<256;++i)
-				now[i]=s[(block-1)*256+i];
-			now=cipher.doFinal(now);
-			byte out[]=new byte[(block-1)*256+now.length];
-			for(int i=0;i<now.length;++i)
-				out[(block-1)*256+i]=now[i];
-			for(int i=0;i<block-1;++i){
-				now=new byte[256];
-				for(int j=0;j<256;++j)
-					now[j]=s[i*256+j];
-				now=cipher.doFinal(now);
-				for(int j=0;j<cryptLength;++j)
-					out[i*cryptLength+j]=now[j];
-			}
-			return out;
+			return crypt(cipher,s,256);
 		}catch(Exception e){
 			e.printStackTrace();
-			System.out.println("error");
 			return null;
 		}
 	}
@@ -134,9 +122,9 @@ public class Network{
 	/**接收图片 */
 	public synchronized BufferedImage receiveImage() throws IOException{
 		byte[] s=receive();
-		if(s==null) System.out.println("***");
+		BufferedImage out;
 		ByteArrayInputStream bin=new ByteArrayInputStream(s);
-		BufferedImage out=ImageIO.read(bin);
+		out=ImageIO.read(bin);
 		return out;
 	}
 

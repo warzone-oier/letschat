@@ -37,7 +37,7 @@ public class Captcha{
 			transform.shear(shearX, shearY);
 			g.setTransform(transform);
 			// 设置随机颜色
-			g.setColor(new Color(random.nextInt(255),
+			g.setColor(new Color(random.nextInt(127)+128,
 				random.nextInt(255),random.nextInt(255)));
 			g.drawString(String.valueOf(s.charAt(i)),25*i+10,30);
 			// 恢复原始变换

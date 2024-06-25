@@ -13,12 +13,14 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.classfile.BufWriter;
 import java.net.Socket;
 import java.text.ParseException;
 /**单个界面 */
@@ -212,8 +214,8 @@ class CaptchaText extends Text implements ActionListener{
 	}
 }
 abstract class AccountWindow extends Panel implements ActionListener{
-	static Text name,password;
-	static CaptchaText captcha;
+	Text name,password;
+	CaptchaText captcha;
 	JButton confirm,cancel;
 	AccountWindow(JFrame f,Font font,int length,String title){
 		super(f, length);
@@ -237,8 +239,8 @@ abstract class AccountWindow extends Panel implements ActionListener{
 	public boolean setVisible(boolean aflag){
 		if(aflag){
 			try{
-				captcha.label.setIcon(new ImageIcon(
-					ClientMain.server.receiveImage()));
+				BufferedImage image=ClientMain.server.receiveImage();
+				captcha.label.setIcon(new ImageIcon(image));
 			}catch(IOException e){
 				return true;
 			}
@@ -247,7 +249,7 @@ abstract class AccountWindow extends Panel implements ActionListener{
 		error.setVisible(!aflag);
 		return false;
 	}
-	abstract protected void Confirm();
+	abstract protected void Confirm() throws IOException;
 	public void actionPerformed(ActionEvent e){
 		if((JButton)(e.getSource())==cancel){//取消
 			setVisible(false);
@@ -261,16 +263,21 @@ abstract class AccountWindow extends Panel implements ActionListener{
 			sendError("请输入密码");
 		else if(captcha.get().equals(""))
 			sendError("请输入验证码");
-		else Confirm();
+		else try{Confirm();}
+		catch(IOException e1){
+			StartWindow.setVisble(true);
+		}
 	}
 }
 class LoginWindow extends AccountWindow{
 	LoginWindow(JFrame f,Font font){
 		super(f,font,7,"登录");
 	}
-	protected void Confirm(){
-		if(!captcha.check()) sendError("验证码错误");
-		else{
+	protected void Confirm() throws IOException{
+		if(!captcha.check()){
+			sendError("验证码错误");
+			captcha.label.setIcon(new ImageIcon(ClientMain.server.receiveImage()));
+		}else{
 			try{
 				byte[] out={Network.login};
 				ClientMain.server.send(out);
@@ -287,18 +294,20 @@ class LoginWindow extends AccountWindow{
 	}
 }
 class RegisterWindow extends AccountWindow{
-	static Text repeat;
+	Text repeat;
 	RegisterWindow(JFrame f,Font font){
 		super(f,font,8,"注册");
 		JPasswordField field=new JPasswordField();
 		field.setEchoChar('*');
 		repeat=new Text(line[3],font,"确认密码",field,32);
 	}
-	protected void Confirm(){
+	protected void Confirm() throws IOException{
 		if(!password.get().equals(repeat.get()))
 			sendError("两次输入密码不相同");
-		else if(!captcha.check()) sendError("验证码错误");
-		else{
+		else if(!captcha.check()){
+			sendError("验证码错误");
+			captcha.label.setIcon(new ImageIcon(ClientMain.server.receiveImage()));
+		}else{
 			try{
 				byte[] out={Network.login};
 				ClientMain.server.send(out);

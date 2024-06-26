@@ -65,7 +65,16 @@ public class Client extends Thread{
 		Files.copy(source,dest,StandardCopyOption.REPLACE_EXISTING);
 
 		user=new User(name);
-		Main.users.put(name,user);
+		new Thread(){
+			public void run(){
+				Thread bef=Main.setLock(this);
+				if(bef!=null) try{
+					bef.join();
+				}catch(InterruptedException e){}
+				Main.users.put(name,user);
+			}
+		}.start();
+		
 		return true;
 	}
 	/** 检查验证码 */
@@ -106,6 +115,11 @@ public class Client extends Thread{
 			user.addClient(this);
 			while(true){//命令接收
 				byte[] command=network.receive();
+				if(command[0]==Network.sendmassage){
+					String receiver=network.receiveString();
+					String text=network.receiveString();
+					user.send(receiver,text);
+				}
 			}
 		}catch(IOException e){
 			user.deleteClient(this);

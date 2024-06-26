@@ -101,4 +101,25 @@ public class User{//某个用户
 			}
 		}.start();
 	}
+	public void send(String receiver,String text){
+		Main.users.get(receiver).receive(name, text);
+	}
+	public void receive(String sender,String text){
+		new Thread(){
+			public void run(){
+				Thread bef=setLock(this);
+				if(bef!=null) try{
+					bef.join();
+				}catch(InterruptedException e){}
+				for(Client client:clients){
+					byte[] command={Network.sendmassage};
+					try{
+						client.network.send(command);
+						client.network.send(sender);						
+						client.network.send(text);
+					}catch(Exception e){}
+				}
+			}
+		}.start();
+	}
 }

@@ -5,7 +5,7 @@ public class Server extends Network{
 		KeyPairGenerator keyPairGenerator;
 		try{
 			keyPairGenerator=KeyPairGenerator.getInstance("RSA");
-			keyPairGenerator.initialize(2048);
+			keyPairGenerator.initialize(1024);
 			keypair=keyPairGenerator.generateKeyPair();
 		}catch(NoSuchAlgorithmException e){
 			e.printStackTrace();

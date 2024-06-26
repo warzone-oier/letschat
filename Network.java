@@ -108,7 +108,7 @@ public class Network{
 		try{//分段解密
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
-			return crypt(cipher,s,256);
+			return crypt(cipher,s,128);
 		}catch(Exception e){
 			e.printStackTrace();
 			return null;
@@ -148,4 +148,5 @@ public class Network{
 	static public final byte longName=7;
 	static public final byte onlineUser=8;
 	static public final byte offlineUser=9;
+	static public final byte sendmassage=10;
 }

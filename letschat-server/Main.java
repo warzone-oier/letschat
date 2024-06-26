@@ -1,17 +1,16 @@
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.util.TreeMap;
+import java.util.HashMap;
 import java.util.Scanner;
 public class Main{
 	static KeyPair keypair;
-	static TreeMap<String,User> users;
+	static HashMap<String,User> users;
 	static Thread now;
 	static final String userFolder="./users";
 	static void setUsers() throws Exception{
-		users=new TreeMap<String,User>();
+		users=new HashMap<String,User>();
 		File file=new File(userFolder);
 		if(!file.isDirectory()){
 			if(file.isFile()) file.delete();
@@ -59,7 +58,7 @@ public class Main{
 	static void setPorts() throws Exception{
 		KeyPairGenerator keyPairGenerator;
 		keyPairGenerator=KeyPairGenerator.getInstance("RSA");
-		keyPairGenerator.initialize(2048);
+		keyPairGenerator.initialize(1024);
 		keypair=keyPairGenerator.generateKeyPair();
 
 		FileInputStream fin=new FileInputStream("ports.data");

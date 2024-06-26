@@ -40,7 +40,7 @@ public class Client extends Thread{
 		System.out.println("login");
 		user=Main.users.get(name);
 		if(user==null) return false;
-		File file=new File(Main.userFolder+name+"/password");
+		File file=new File(Main.userFolder+"/"+name+"/password");
 		FileInputStream fin=new FileInputStream(file);
 		DataInputStream bin=new DataInputStream(fin);
 		if(!password.equals(bin.readUTF())) return false;///检查密码是否正确
@@ -112,7 +112,6 @@ public class Client extends Thread{
 				}
 			}
 		}catch(IOException e){
-			e.printStackTrace();
 			return;
 		}
 	}

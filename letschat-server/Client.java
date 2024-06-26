@@ -92,6 +92,7 @@ public class Client extends Thread{
 							return;
 						}else out[0]=Network.failed; 
 					}else if(register(name,password)){
+						System.out.println("***");
 						network.send(out);
 						return;
 					}else out[0]=network.failed;

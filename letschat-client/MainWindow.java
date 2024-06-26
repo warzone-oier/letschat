@@ -57,6 +57,7 @@ class Bottom{
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		scrollPane=new JScrollPane(panel);
 		scrollPane.setPreferredSize(new Dimension(300,725));
+		friends=new HashMap<String,Friend>();
 	}
 	public void addUser(String name){
 		if(friends.get(name)==null){

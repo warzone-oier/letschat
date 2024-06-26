@@ -36,7 +36,7 @@ public class Main{
 					bef.join();
 				}catch(InterruptedException e){}
 				System.out.println("addUser"+name);
-				for(String s:users.keySet()){
+				for(String s:users.keySet()) if(!s.equals(name)){
 					System.out.println(s);
 					users.get(s).addUser(name);
 				}
@@ -51,7 +51,7 @@ public class Main{
 				if(bef!=null) try{
 					bef.join();
 				}catch(InterruptedException e){}
-				for(String s:users.keySet())
+				for(String s:users.keySet()) if(!s.equals(name))
 					users.get(s).removeUser(name);
 			}
 		}.start();

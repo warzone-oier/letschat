@@ -74,38 +74,32 @@ public class Client extends Thread{
 	private void checkCaptcha() throws IOException{
 		while(true){
 			byte command=network.receive()[0];
-			if(command==Network.changeCaptcha){
-				captcha=new Captcha();
-				network.send(captcha.image);
-			}else if(command==Network.checkCaptcha){
+			if(command==Network.checkCaptcha){
 				String s=network.receiveString();
+				byte[] out={Network.success};
 				if(captcha.check(s)){
-					byte[] out={Network.success};
 					network.send(out);
 					command=network.receive()[0];
 					String name=network.receiveString();
 					String password=network.receiveString();
-					if(name.length()>=32){
+					if(name.length()>=32)
 						out[0]=Network.longName;
-						network.send(out);
-					}else if(!namecheck(name)){
+					else if(!namecheck(name))
 						out[0]=Network.invaildName;
-						network.send(out);
-					}else if(command==Network.login){
+					else if(command==Network.login){
 						if(login(name,password)){
 							network.send(out);
 							return;
-						}
+						}else out[0]=Network.failed; 
 					}else if(register(name,password)){
 						network.send(out);
 						return;
-					}
-				}
-				byte[] out={Network.failed};
+					}else out[0]=network.failed;
+				}else out[0]=Network.failed;
 				network.send(out);
-				captcha=new Captcha();
-				network.send(captcha.image);
 			}
+			captcha=new Captcha();
+			network.send(captcha.image);
 		}
 	}
 	public void run(){

@@ -31,13 +31,16 @@ public class Main{
 	static void addUser(String name){
 		new Thread(){
 			public void run(){
-				System.out.println("addUser"+name);
 				Thread bef=setLock(this);
 				if(bef!=null) try{
 					bef.join();
 				}catch(InterruptedException e){}
-				for(String s:users.keySet())
+				System.out.println("addUser"+name);
+				for(String s:users.keySet()){
+					System.out.println(s);
 					users.get(s).addUser(name);
+				}
+					
 			}
 		}.start();
 	}

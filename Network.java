@@ -90,7 +90,7 @@ public class Network{
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.ENCRYPT_MODE,publickey);
 
-			code=crypt(cipher,s,245);
+			code=crypt(cipher,s,117);
 		}catch(Exception e){
 			e.printStackTrace();
 			return;

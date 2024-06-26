@@ -73,18 +73,21 @@ class Profile implements ActionListener{
 			File file=new File(directory+filename);
 			BufferedImage image;
 			try{
-				System.out.println("...");
 				image=ImageIO.read(file);
 			}catch(IOException e1){
 				ErrorWindow error=new ErrorWindow("错误：不支持的文件格式");
 				return;
 			}
 			try{
+				System.out.println("aaa");
 				byte[] command={Network.changeAvatar};
 				ClientMain.server.send(command);
+				System.out.println("***");
 				ClientMain.server.send(image);
 				//发送改头像信息，由服务器的反馈改服务端头像
+				System.out.println("...");
 			}catch(IOException e1){
+				System.out.println("asasa");
 				ClientMain.mainWindow.setVisble(false, "");
 			}
 		}

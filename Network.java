@@ -63,7 +63,7 @@ public class Network{
 		publickey=null;
 		return false;
 	}
-	private byte[] crypt(Cipher cipher,final byte[] s,int cryptLength) throws Exception{
+	private byte[] crypt(Cipher cipher,byte[] s,int cryptLength) throws Exception{
 		ArrayList<Byte> list=new ArrayList<>();
 		for(int i=0;i<s.length;i+=cryptLength){
 			final int blockSize=Math.min(cryptLength,s.length-i);
@@ -78,7 +78,8 @@ public class Network{
 		return out;
 	}
 	/**发送信息，若网络中断则抛出异常*/
-	public synchronized void send(final byte s[]) throws IOException{
+	public /*synchronized*/ void send(byte s[]) throws IOException{
+		System.out.println("iii");
 		Cipher cipher;
 		String code;
 		try{
@@ -90,6 +91,8 @@ public class Network{
 			return;
 		}
 		output.writeUTF(code);
+		
+		System.out.println("ooo");
 	}
 	/**接收信息，若网络中断则抛出异常*/
 	public synchronized byte[] receive() throws IOException{

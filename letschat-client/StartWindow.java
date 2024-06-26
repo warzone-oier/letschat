@@ -30,7 +30,7 @@ abstract class Panel{
 	JLabel error;
 	Panel(JFrame f,int size){
 		frame=new JPanel();
-		frame.setBounds(0, 0, 400, 300);
+		frame.setBounds(0, 0, 500, 400);
 		frame.setLayout(new GridLayout(size,1));
 		f.add(frame);
 		line=new JPanel[size];
@@ -310,7 +310,7 @@ class RegisterWindow extends AccountWindow{
 			sendError("验证码错误");
 		else{
 			try{
-				byte[] out={Network.login};
+				byte[] out={Network.register};
 				ClientMain.server.send(out);
 				ClientMain.server.send(name.get());
 				ClientMain.server.send(password.get());

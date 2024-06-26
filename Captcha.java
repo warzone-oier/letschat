@@ -7,7 +7,7 @@ import java.security.SecureRandom;
 public class Captcha{
 	// 随机字符串的字符集
 	private static final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	private static final int length=6,width=160,height=40;
+	private static final int length=6,width=160,height=50;
 	private static SecureRandom random=new SecureRandom();
 	String s;
 	BufferedImage image;
@@ -20,8 +20,8 @@ public class Captcha{
         return s.toString();
     }
 	private static BufferedImage generateImage(String s){
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = image.createGraphics();
+		BufferedImage image =new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g=image.createGraphics();
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, width, height);
 		// 画出随机字符并进行扭曲

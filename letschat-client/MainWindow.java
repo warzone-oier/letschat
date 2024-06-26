@@ -102,21 +102,7 @@ class Bottom{
 		scrollPane.setPreferredSize(new Dimension(300,725));
 	}
 }
-class Loader extends Thread{
-	/** 网络读取线程 */
-	public void run(){
-		try{
-			while(true){
-				byte[] command=ClientMain.server.receive();
-				if(command[0]==Network.changeAvatar)
-					ClientMain.mainWindow.profile.setAvatar(ClientMain.server.receiveImage());
-			}
-		}catch(IOException e){
-			ClientMain.mainWindow.setVisble(false,"");
-		}
-	}
-}
-public class MainWindow {
+public class MainWindow extends Thread{
 	static JFrame frame;
 	static Profile profile;
 	static Bottom bottom;
@@ -152,8 +138,19 @@ public class MainWindow {
 				StartWindow.setVisble(true);
 				return;
 			}
-			Loader loader=new Loader();
-			loader.start();
+			start();
 		}else StartWindow.setVisble(true);
+	}
+	/** 网络读取线程 */
+	public void run(){
+		try{
+			while(true){
+				byte[] command=ClientMain.server.receive();
+				if(command[0]==Network.changeAvatar)
+					profile.setAvatar(ClientMain.server.receiveImage());
+			}
+		}catch(IOException e){
+			setVisble(false,"");
+		}
 	}
 }

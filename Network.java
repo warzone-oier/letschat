@@ -78,7 +78,7 @@ public class Network{
 		return out;
 	}
 	/**发送信息，若网络中断则抛出异常*/
-	public synchronized void send(byte s[]) throws IOException{
+	public void send(byte s[]) throws IOException{
 		System.out.println("iii");
 		Cipher cipher;
 		String code;

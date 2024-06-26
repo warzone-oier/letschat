@@ -70,6 +70,8 @@ public class User{//某个用户
 				if(bef!=null) try{
 					bef.join();
 				}catch(InterruptedException e){}
+				
+				System.out.println(s+" addUser*"+name);
 				for(Client client:clients){
 					byte[] command={Network.onlineUser};
 					try{

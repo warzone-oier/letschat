@@ -9,6 +9,7 @@ public class PortListener extends Thread{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+		setPriority(1);
 	}
 	public void run(){
 		while(true){

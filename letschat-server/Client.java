@@ -25,6 +25,7 @@ public class Client extends Thread{
 		if(network.connect(s)) throw new IOException();
 		captcha=new Captcha();
 		network.send(captcha.image);
+		setPriority(1);
 	}
 	/** 检查用户名是否合法 */
 	private boolean namecheck(String name){

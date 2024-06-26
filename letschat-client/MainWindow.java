@@ -49,8 +49,7 @@ class TextArea{
 		name=s;
 		panel=new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		area=new JTextArea();
-		area.setSize(800, 100);
+		area=new JTextArea(800, 100);
 		area.setFont(new Font("黑体", Font.PLAIN, 10));
 		send=new JButton("发送");
 		send.setFont(new Font("黑体", Font.PLAIN, 10));
@@ -76,7 +75,7 @@ class Friend implements ActionListener{
 		frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.setSize(800,500);
-		frame.setLocation(400,400);
+		frame.setLocation(400,200);
 		frame.setVisible(false);
 
 		dialog=new ScrollPanel(800, 300);

@@ -74,9 +74,11 @@ public class User{//某个用户
 				System.out.println(s+" addUser*"+name);
 				for(Client client:clients){
 					byte[] command={Network.onlineUser};
+					System.out.println("***");
 					try{
-						client.network.send(command);
-						client.network.send(s);
+						
+					System.out.println("***");client.network.send(command);
+					System.out.println("***");client.network.send(s);
 					}catch(Exception e){}
 				}
 				System.out.println(s+" addUser "+name);

@@ -73,6 +73,7 @@ class Profile implements ActionListener{
 			File file=new File(directory+filename);
 			BufferedImage image;
 			try{
+				System.out.println("...");
 				image=ImageIO.read(file);
 			}catch(IOException e1){
 				ErrorWindow error=new ErrorWindow("错误：不支持的文件格式");

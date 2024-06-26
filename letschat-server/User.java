@@ -46,6 +46,7 @@ public class User{//某个用户
 			lock=false;
 			return;//不可能有异常
 		}
+		System.out.println("...");
 		for(Iterator<Client> ite=clients.iterator();ite.hasNext();){
 			Client client=ite.next();
 			if(client.isAlive()){

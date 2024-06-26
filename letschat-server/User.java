@@ -31,7 +31,7 @@ public class User{//某个用户
 			//不可能有异常
 		}
 		lock=false;
-		System.out.println("___")
+		System.out.println("___");
 	}
 	/** 改头像 */
 	public synchronized void changeAvatar(BufferedImage image){

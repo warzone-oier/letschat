@@ -107,7 +107,8 @@ public class Client extends Thread{
 			System.out.println("000");
 			while(true){//命令接收
 				byte[] command=network.receive();
-				if(command[0]==network.changeAvatar){
+				System.out.println("111");
+				if(command[0]==Network.changeAvatar){
 					System.out.println("aaa");
 					BufferedImage image=network.receiveImage();
 					System.out.println("bbb");

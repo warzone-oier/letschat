@@ -47,7 +47,7 @@ class Profile implements ActionListener{
 	JPanel panel;
 	Profile(){
 		panel=new JPanel();
-		panel.setPreferredSize(new Dimension(300, 50));
+		panel.setPreferredSize(new Dimension(300, 75));
 		panel.setLayout(new FlowLayout());
 		avatar=new JLabel();
 		name=new JLabel();
@@ -96,7 +96,7 @@ class Bottom{
 	Bottom(){
 		panel=new JPanel();
 		scrollPane=new JScrollPane(panel);
-		scrollPane.setPreferredSize(new Dimension(300,750));
+		scrollPane.setPreferredSize(new Dimension(300,725));
 	}
 }
 public class MainWindow extends Thread{
@@ -117,7 +117,7 @@ public class MainWindow extends Thread{
 
 		splitPane=new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 			profile.panel,bottom.scrollPane);
-		splitPane.setDividerLocation(50);
+		splitPane.setDividerLocation(75);
 		splitPane.setEnabled(false);
 		frame.add(splitPane);
 	}

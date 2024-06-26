@@ -23,7 +23,10 @@ public class User{//某个用户
 		clients.add(client);
 		try{
 			File file=new File(Main.userFolder+"/"+name+"/avatar");
-			client.network.send(ImageIO.read(file));
+			System.out.println("...");
+			BufferedImage image=ImageIO.read(file);
+			System.out.println(">>>");
+			client.network.send(image);
 		}catch(IOException e){
 			e.printStackTrace();
 			//不可能有异常

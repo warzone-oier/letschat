@@ -92,9 +92,8 @@ class Bottom{
 	JPanel panel;
 	Bottom(){
 		panel=new JPanel();
-		scrollPane.setPreferredSize(new Dimension(300,700));
-		
 		scrollPane=new JScrollPane(panel);
+		scrollPane.setPreferredSize(new Dimension(300,700));
 	}
 }
 public class MainWindow extends Thread{
@@ -126,8 +125,9 @@ public class MainWindow extends Thread{
 		splitPane.setVisible(aflag);
 		if(aflag){
 			try{
-				profile.name.setText(name);
 				BufferedImage image=ClientMain.server.receiveImage();
+				System.out.println("...");
+				profile.name.setText(name);
 				profile.setAvatar(image);
 			}catch(IOException e){
 				frame.setVisible(false);

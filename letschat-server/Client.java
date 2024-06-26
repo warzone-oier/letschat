@@ -104,6 +104,7 @@ public class Client extends Thread{
 		try{
 			checkCaptcha();
 			user.addClient(this);
+			System.out.println("000");
 			while(true){//命令接收
 				byte[] command=network.receive();
 				if(command[0]==network.changeAvatar){

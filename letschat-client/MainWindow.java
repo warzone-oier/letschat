@@ -47,13 +47,13 @@ class Profile implements ActionListener{
 	JPanel panel;
 	Profile(){
 		panel=new JPanel();
-		panel.setPreferredSize(new Dimension(300, 100));
+		panel.setPreferredSize(new Dimension(300, 50));
 		panel.setLayout(new FlowLayout());
 		avatar=new JLabel();
 		name=new JLabel();
 		name.setFont(new Font("黑体", Font.BOLD, 20));
 		settings=new JButton("更改头像");
-		settings.setFont(new Font("黑体", Font.BOLD, 20));
+		settings.setFont(new Font("黑体", Font.BOLD, 15));
 		panel.add(avatar);
 		panel.add(name);
 		panel.add(settings);
@@ -96,7 +96,7 @@ class Bottom{
 	Bottom(){
 		panel=new JPanel();
 		scrollPane=new JScrollPane(panel);
-		scrollPane.setPreferredSize(new Dimension(300,700));
+		scrollPane.setPreferredSize(new Dimension(300,750));
 	}
 }
 public class MainWindow extends Thread{
@@ -117,7 +117,7 @@ public class MainWindow extends Thread{
 
 		splitPane=new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 			profile.panel,bottom.scrollPane);
-		splitPane.setDividerLocation(100);
+		splitPane.setDividerLocation(50);
 		splitPane.setEnabled(false);
 		frame.add(splitPane);
 	}

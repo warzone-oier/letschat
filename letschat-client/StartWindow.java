@@ -257,6 +257,7 @@ abstract class AccountWindow extends Panel implements ActionListener{
 		byte[] command=ClientMain.server.receive();
 		if(command[0]==Network.success){
 			StartWindow.setVisble(false);
+			ClientMain.mainWindow=new MainWindow();
 			ClientMain.mainWindow.setVisble(true,name.get());
 			//sendError("登录成功");
 		}else{

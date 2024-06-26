@@ -8,6 +8,5 @@ public class ClientMain{
 		font=new Font("黑体", Font.BOLD, 10);
 		server=new Server();
 		start=new StartWindow();
-		mainWindow=new MainWindow();
 	}
 }

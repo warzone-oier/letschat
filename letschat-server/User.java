@@ -105,6 +105,7 @@ public class User{//某个用户
 		Main.users.get(receiver).receive(name, text);
 	}
 	public void receive(String sender,String text){
+		System.out.println("send from "+sender+" to "+name);
 		new Thread(){
 			public void run(){
 				Thread bef=setLock(this);
@@ -119,6 +120,7 @@ public class User{//某个用户
 						client.network.send(text);
 					}catch(Exception e){}
 				}
+				System.out.println("*send from"+sender+" to "+name);
 			}
 		}.start();
 	}

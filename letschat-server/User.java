@@ -32,11 +32,11 @@ public class User{//某个用户
 						if(bef!=null) try{
 							bef.join();
 						}catch(InterruptedException e){}
-						for(String name:Main.users.keySet()){
+						for(String s:Main.users.keySet()) if(!s.equals(name)){
 							byte[] command={Network.onlineUser};
-							if(Main.users.get(name).onlineclient>0) try{
+							if(Main.users.get(s).onlineclient>0) try{
 								client.network.send(command);
-								client.network.send(name);
+								client.network.send(s);
 							}catch(IOException e){
 								return;
 							}

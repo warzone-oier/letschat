@@ -79,6 +79,11 @@ public class Network{
 	/**发送信息，若网络中断则抛出异常*/
 	public void send(byte s[]) throws IOException{
 		System.out.println("iii");
+		if(s.length==1){//单字节不加密
+			output.writeInt(1);
+			output.write(s);
+			return;
+		}
 		Cipher cipher;
 		byte[] code;
 		try{
@@ -96,9 +101,10 @@ public class Network{
 	}
 	/**接收信息，若网络中断则抛出异常*/
 	public byte[] receive() throws IOException{
-		Cipher cipher;
-		int length=input.readInt();
+		final int length=input.readInt();
 		byte s[]=input.readNBytes(length);
+		if(length==1) return s;//单字节不加密
+		Cipher cipher;
 		try{//分段解密
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());

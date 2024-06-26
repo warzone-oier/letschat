@@ -282,10 +282,12 @@ class LoginWindow extends AccountWindow{
 				ClientMain.server.send(password.get());
 				byte command=ClientMain.server.receive()[0];
 				if(command==Network.longName)
-					sendError("用户名不得超过127个字符");
+					sendError("用户名不得超过31个字符");
 				else if(command==Network.invaildName)
 					sendError("用户名不得含有空格及以下字符:"+Network.filter);
 				else if(command==Network.success){
+					StartWindow.setVisble(false);
+					ClientMain.mainWindow.setVisble(true,name.get());
 					sendError("登录成功");
 				}else sendError("用户名或密码错误");
 			}catch(IOException e){
@@ -315,6 +317,8 @@ class RegisterWindow extends AccountWindow{
 				ClientMain.server.send(password.get());
 				byte command=ClientMain.server.receive()[0];
 				if(command==Network.success){
+					StartWindow.setVisble(false);
+					ClientMain.mainWindow.setVisble(true,name.get());
 					sendError("注册成功");
 				}else sendError("用户名已存在");
 			}catch(IOException e){
@@ -332,6 +336,7 @@ public class StartWindow{
 	StartWindow(){
 		frame=new JFrame("Hello LetsChat!");
 		frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(500,400);
 		frame.setLocation(200,200);
 		frame.setLayout(null);
@@ -339,7 +344,6 @@ public class StartWindow{
 		login=new LoginWindow(frame, ClientMain.font);
 		register=new RegisterWindow(frame, ClientMain.font);
 		frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		hello.setVisible(true);
 	}
 	/** 如果显示，则转到开始画面，显示网络异常 */

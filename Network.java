@@ -137,4 +137,5 @@ public class Network{
 	static public final byte register=5;
 	static public final byte invaildName=6;
 	static public final byte longName=7;
+	static public final byte changeAvatar=8;
 }

@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -34,6 +35,7 @@ public class Client extends Thread{
 				if(c==p) return false;
 		return true;
 	}
+	/** 登录 */
 	private boolean login(String name,String password) throws IOException{
 		System.out.println("login");
 		user=Main.users.get(name);
@@ -45,6 +47,7 @@ public class Client extends Thread{
 		user.addClient(this);
 		return true;
 	}
+	/** 注册 */
 	private boolean register(String name,String password) throws IOException{
 		System.out.println("register");
 		user=Main.users.get(name);
@@ -67,7 +70,8 @@ public class Client extends Thread{
 		user.addClient(this);
 		return true;
 	}
-	private void checkCaptcha() throws IOException{//验证码
+	/** 检查验证码 */
+	private void checkCaptcha() throws IOException{
 		while(true){
 			byte command=network.receive()[0];
 			if(command==Network.changeCaptcha){
@@ -81,7 +85,7 @@ public class Client extends Thread{
 					command=network.receive()[0];
 					String name=network.receiveString();
 					String password=network.receiveString();
-					if(name.length()>=128){
+					if(name.length()>=32){
 						out[0]=Network.longName;
 						network.send(out);
 					}else if(!namecheck(name)){
@@ -107,6 +111,13 @@ public class Client extends Thread{
 	public void run(){
 		try{
 			checkCaptcha();
+			while(true){//命令接收
+				byte[] command=network.receive();
+				if(command[0]==network.changeAvatar){
+					BufferedImage image=network.receiveImage();
+					user.changeAvatar(image);
+				}
+			}
 		}catch(IOException e){
 			return;
 		}

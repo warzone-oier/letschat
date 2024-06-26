@@ -82,6 +82,7 @@ public class Network{
 		if(s.length==1){//单字节不加密
 			output.writeInt(1);
 			output.write(s);
+			System.out.println("ooo");
 			return;
 		}
 		Cipher cipher;

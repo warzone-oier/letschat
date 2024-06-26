@@ -78,30 +78,31 @@ public class Network{
 		return out;
 	}
 	/**发送信息，若网络中断则抛出异常*/
-	public void send(byte s[]) throws IOException{
+	public synchronized void send(byte s[]) throws IOException{
 		System.out.println("iii");
 		Cipher cipher;
-		String code;
+		byte[] code;
 		try{
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.ENCRYPT_MODE,publickey);
-			code=Base64.getEncoder().encodeToString(crypt(cipher,s,245));
+
+			code=crypt(cipher,s,245);
 		}catch(Exception e){
 			e.printStackTrace();
 			return;
 		}
-		output.writeUTF(code);
-		
+		output.writeInt(code.length);
+		output.write(code);
 		System.out.println("ooo");
 	}
 	/**接收信息，若网络中断则抛出异常*/
 	public synchronized byte[] receive() throws IOException{
 		Cipher cipher;
-		String code=input.readUTF();
+		int length=input.readInt();
+		byte s[]=input.readNBytes(length);
 		try{//分段解密
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
-			byte s[]=Base64.getDecoder().decode(code);
 			return crypt(cipher,s,256);
 		}catch(Exception e){
 			e.printStackTrace();

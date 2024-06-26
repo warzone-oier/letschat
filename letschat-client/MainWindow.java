@@ -87,7 +87,7 @@ class Profile implements ActionListener{
 				//发送改头像信息，由服务器的反馈改服务端头像
 				System.out.println("...");
 			}catch(IOException e1){
-				System.out.println("asasa");
+				e1.printStackTrace();
 				ClientMain.mainWindow.setVisble(false, "");
 			}
 		}
@@ -138,7 +138,7 @@ public class MainWindow extends Thread{
 				StartWindow.setVisble(true);
 				return;
 			}
-			start();
+			//start();
 		}else StartWindow.setVisble(true);
 	}
 	/** 网络读取线程 */

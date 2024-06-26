@@ -66,7 +66,6 @@ public class User{//某个用户
 	public void addUser(String s){
 		new Thread(){
 			public void run(){
-				System.out.println(s+" addUser "+name);
 				Thread bef=setLock(this);
 				if(bef!=null) try{
 					bef.join();
@@ -78,6 +77,7 @@ public class User{//某个用户
 						client.network.send(s);
 					}catch(Exception e){}
 				}
+				System.out.println(s+" addUser "+name);
 			}
 		}.start();
 	}

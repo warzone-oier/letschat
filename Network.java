@@ -90,7 +90,7 @@ public class Network{
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.ENCRYPT_MODE,publickey);
 
-			code=crypt(cipher,s,117);
+			code=crypt(cipher,s,245);
 		}catch(Exception e){
 			e.printStackTrace();
 			return;
@@ -108,7 +108,7 @@ public class Network{
 		try{//分段解密
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.DECRYPT_MODE,keypair.getPrivate());
-			return crypt(cipher,s,128);
+			return crypt(cipher,s,256);
 		}catch(Exception e){
 			e.printStackTrace();
 			return null;

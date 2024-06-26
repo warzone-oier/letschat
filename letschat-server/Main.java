@@ -58,7 +58,7 @@ public class Main{
 	static void setPorts() throws Exception{
 		KeyPairGenerator keyPairGenerator;
 		keyPairGenerator=KeyPairGenerator.getInstance("RSA");
-		keyPairGenerator.initialize(1024);
+		keyPairGenerator.initialize(2048);
 		keypair=keyPairGenerator.generateKeyPair();
 
 		FileInputStream fin=new FileInputStream("ports.data");

@@ -67,7 +67,7 @@ class Profile implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 		FileDialog fileDialog=new FileDialog(MainWindow.frame, "选择图片", FileDialog.LOAD);
 		fileDialog.setVisible(true);
-		String filename=fileDialog.getFile();
+		String filename=fileDialog.getFile(); 
 		if(filename!=null){
 			String directory=fileDialog.getDirectory();
 			File file=new File(directory+filename);

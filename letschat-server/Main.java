@@ -28,6 +28,7 @@ public class Main{
 	static void addUser(String name){
 		new Thread(){
 			public void run(){
+				System.out.println("addUser"+name);
 				while(userslock);
 				userslock=true;
 				for(String s:users.keySet())

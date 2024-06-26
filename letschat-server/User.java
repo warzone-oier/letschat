@@ -54,9 +54,10 @@ public class User{//某个用户
 		}.start();
 	}
 	/** 加入新在线用户 */
-	public void addUser(String name){
+	public void addUser(String s){
 		new Thread(){
 			public void run(){
+				System.out.println(s+" addUser "+name);
 				while(lock) if(onlineclient==0) return;
 				if(onlineclient==0) return;
 				lock=true;
@@ -64,7 +65,7 @@ public class User{//某个用户
 					byte[] command={Network.onlineUser};
 					try{
 						client.network.send(command);
-						client.network.send(name);
+						client.network.send(s);
 					}catch(Exception e){
 						lock=false;
 						return;

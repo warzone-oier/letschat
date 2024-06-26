@@ -79,8 +79,8 @@ class Profile implements ActionListener{
 				return;
 			}
 			try{
-				System.out.println("aaa");
 				byte[] command={Network.changeAvatar};
+				System.out.println("aaa");
 				ClientMain.server.send(command);
 				System.out.println("***");
 				ClientMain.server.send(image);
@@ -102,7 +102,21 @@ class Bottom{
 		scrollPane.setPreferredSize(new Dimension(300,725));
 	}
 }
-public class MainWindow extends Thread{
+class Loader extends Thread{
+	/** 网络读取线程 */
+	public void run(){
+		try{
+			while(true){
+				byte[] command=ClientMain.server.receive();
+				if(command[0]==Network.changeAvatar)
+					ClientMain.mainWindow.profile.setAvatar(ClientMain.server.receiveImage());
+			}
+		}catch(IOException e){
+			ClientMain.mainWindow.setVisble(false,"");
+		}
+	}
+}
+public class MainWindow {
 	static JFrame frame;
 	static Profile profile;
 	static Bottom bottom;
@@ -138,19 +152,8 @@ public class MainWindow extends Thread{
 				StartWindow.setVisble(true);
 				return;
 			}
-			start();
+			Loader loader=new Loader();
+			loader.start();
 		}else StartWindow.setVisble(true);
-	}
-	/** 网络读取线程 */
-	public void run(){
-		try{
-			while(true){
-				byte[] command=ClientMain.server.receive();
-				if(command[0]==Network.changeAvatar)
-					profile.setAvatar(ClientMain.server.receiveImage());
-			}
-		}catch(IOException e){
-			setVisble(false,"");
-		}
 	}
 }

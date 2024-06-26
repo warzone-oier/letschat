@@ -57,7 +57,8 @@ public class User{//某个用户
 	public void addUser(String name){
 		new Thread(){
 			public void run(){
-				while(lock);
+				while(lock) if(onlineclient==0) return;
+				if(onlineclient==0) return;
 				lock=true;
 				for(Client client:clients){
 					byte[] command={Network.onlineUser};
@@ -77,7 +78,8 @@ public class User{//某个用户
 	public void removeUser(String name){
 		new Thread(){
 			public void run(){
-				while(lock);
+				while(lock) if(onlineclient==0) return;
+				if(onlineclient==0) return;
 				lock=true;
 				for(Client client:clients){
 					byte[] command={Network.offlineUser};

@@ -31,8 +31,7 @@ public class Main{
 				while(userslock);
 				userslock=true;
 				for(String s:users.keySet())
-					if(!s.equals(name))
-						users.get(s).addUser(name);
+					users.get(s).addUser(name);
 				userslock=false;
 			}
 		}.start();
@@ -43,8 +42,7 @@ public class Main{
 				while(userslock);
 				userslock=true;
 				for(String s:users.keySet())
-					if(!s.equals(name))
-						users.get(s).removeUser(name);
+					users.get(s).removeUser(name);
 				userslock=false;
 			}
 		}.start();

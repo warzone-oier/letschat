@@ -67,6 +67,7 @@ public class Main{
 			int port=scan.nextInt();
 			if(port<0||port>=65536) throw new Exception();
 			PortListener listener=new PortListener(port);
+			listener.setPriority(1);
 			listener.start();
 		}
 		scan.close();

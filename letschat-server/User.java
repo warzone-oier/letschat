@@ -18,8 +18,10 @@ public class User{//某个用户
 	}
 	/** 将客户端加入该用户， */
 	public void addClient(Client client){
+		System.out.println("***");
 		while(lock);
 		lock=true;
+		System.out.println("...");
 		clients.add(client);
 		try{
 			File file=new File(Main.userFolder+"/"+name+"/avatar");
@@ -29,6 +31,7 @@ public class User{//某个用户
 			//不可能有异常
 		}
 		lock=false;
+		System.out.println("___")
 	}
 	/** 改头像 */
 	public synchronized void changeAvatar(BufferedImage image){

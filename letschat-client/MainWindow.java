@@ -46,7 +46,7 @@ class Profile implements ActionListener{
 	JPanel panel;
 	Profile(){
 		panel=new JPanel();
-		panel.setSize(300,100);
+		panel.setPreferredSize(new Dimension(300, 100));
 		panel.setLayout(new FlowLayout());
 		avatar=new JLabel();
 		name=new JLabel();
@@ -93,7 +93,7 @@ class Bottom{
 	Bottom(){
 		scrollPane=new JScrollPane();
 		panel=new JPanel();
-		scrollPane.setPreferredSize(new Dimension(300,900));
+		scrollPane.setPreferredSize(new Dimension(300,700));
 		scrollPane.add(panel);
 	}
 }
@@ -106,7 +106,7 @@ public class MainWindow extends Thread{
 		frame=new JFrame("");
 		frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(300,1000);
+		frame.setSize(300,800);
 		frame.setLocation(100,100);
 		frame.setLayout(null);
 		frame.setVisible(false);
@@ -124,7 +124,7 @@ public class MainWindow extends Thread{
 	public void setVisble(boolean aflag,String name){
 		frame.setVisible(aflag);
 		if(aflag){
-			try {
+			try{
 				BufferedImage image=ClientMain.server.receiveImage();
 				profile.setAvatar(image);
 				profile.name.setText(name);

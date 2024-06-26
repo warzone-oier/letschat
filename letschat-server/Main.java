@@ -8,10 +8,9 @@ import java.util.Scanner;
 public class Main{
 	static KeyPair keypair;
 	static TreeMap<String,User> users;
-	static boolean userslock;
+	static Thread now;
 	static final String userFolder="./users";
 	static void setUsers() throws Exception{
-		userslock=true;
 		users=new TreeMap<String,User>();
 		File file=new File(userFolder);
 		if(!file.isDirectory()){
@@ -23,28 +22,34 @@ public class Main{
 			User user=new User(name);
 			users.put(name, user);
 		}
-		userslock=false;
+	}
+	public static synchronized Thread setLock(Thread next){
+		Thread bef=now;
+		now=next;
+		return bef;
 	}
 	static void addUser(String name){
 		new Thread(){
 			public void run(){
 				System.out.println("addUser"+name);
-				while(userslock);
-				userslock=true;
+				Thread bef=setLock(this);
+				if(bef!=null) try{
+					bef.join();
+				}catch(InterruptedException e){}
 				for(String s:users.keySet())
 					users.get(s).addUser(name);
-				userslock=false;
 			}
 		}.start();
 	}
 	static void removeUser(String name){
 		new Thread(){
 			public void run(){
-				while(userslock);
-				userslock=true;
+				Thread bef=setLock(this);
+				if(bef!=null) try{
+					bef.join();
+				}catch(InterruptedException e){}
 				for(String s:users.keySet())
 					users.get(s).removeUser(name);
-				userslock=false;
 			}
 		}.start();
 	}

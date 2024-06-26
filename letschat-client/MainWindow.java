@@ -59,13 +59,18 @@ class Bottom{
 		scrollPane.setPreferredSize(new Dimension(300,725));
 	}
 	public void addUser(String name){
-		Friend friend=new Friend(name);
-		friends.put(name,friend);
-		panel.add(friend.button);
+		if(friends.get(name)==null){
+			Friend friend=new Friend(name);
+			friends.put(name,friend);
+			panel.add(friend.button);
+		}
 	}
 	public void deleteUser(String name){
-		panel.remove(friends.get(name).button);
-		friends.remove(name);
+		Friend friend=friends.get(name);
+		if(friend!=null){
+			panel.remove(friends.get(name).button);
+			friends.remove(name);
+		}
 	}
 }
 public class MainWindow extends Thread{

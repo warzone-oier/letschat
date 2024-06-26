@@ -77,7 +77,7 @@ public class Network{
 		return out;
 	}
 	/**发送信息，若网络中断则抛出异常*/
-	public synchronized void send(byte s[]) throws IOException{
+	public void send(byte s[]) throws IOException{
 		System.out.println("iii");
 		Cipher cipher;
 		byte[] code;
@@ -95,7 +95,7 @@ public class Network{
 		System.out.println("ooo");
 	}
 	/**接收信息，若网络中断则抛出异常*/
-	public synchronized byte[] receive() throws IOException{
+	public byte[] receive() throws IOException{
 		Cipher cipher;
 		int length=input.readInt();
 		byte s[]=input.readNBytes(length);
@@ -109,21 +109,21 @@ public class Network{
 		}
 	}
 	/**发送字符串 */
-	public synchronized void send(String s) throws IOException{
+	public void send(String s) throws IOException{
 		send(s.getBytes());
 	}
 	/**接收字符串 */
-	public synchronized String receiveString() throws IOException{
+	public String receiveString() throws IOException{
 		return new String(receive());
 	}
 	/**发送图片 */
-	public synchronized void send(BufferedImage image) throws IOException{
+	public void send(BufferedImage image) throws IOException{
 		ByteArrayOutputStream bout=new ByteArrayOutputStream();
 		ImageIO.write(image,"png",bout);
 		send(bout.toByteArray());
 	}
 	/**接收图片 */
-	public synchronized BufferedImage receiveImage() throws IOException{
+	public BufferedImage receiveImage() throws IOException{
 		byte[] s=receive();
 		BufferedImage out;
 		ByteArrayInputStream bin=new ByteArrayInputStream(s);

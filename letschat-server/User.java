@@ -33,8 +33,10 @@ public class User{//某个用户
 	}
 	/** 改头像 */
 	public synchronized void changeAvatar(BufferedImage image){
+		System.out.println("...");
 		while(lock);
 		lock=true;
+		System.out.println(">>>");
 		File file=new File(Main.userFolder+"/"+name+"/avatar");
 		file.delete();
 		file=new File(Main.userFolder+"/"+name+"/avatar");
@@ -46,7 +48,7 @@ public class User{//某个用户
 			lock=false;
 			return;//不可能有异常
 		}
-		System.out.println("...");
+		System.out.println("***");
 		for(Iterator<Client> ite=clients.iterator();ite.hasNext();){
 			Client client=ite.next();
 			if(client.isAlive()){

@@ -5,11 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.KeyPair;
-
-
 public class Client extends Thread{
-	private Network network;
+	public Network network;
 	private User user;
 	private Captcha captcha;
 	Client(Socket s,KeyPair key) throws IOException{
@@ -23,8 +25,6 @@ public class Client extends Thread{
 		captcha=new Captcha();
 		network.send(captcha.image);
 	}
-	
-	
 	/** 检查用户名是否合法 */
 	private boolean namecheck(String name){
 		char get[]=name.toCharArray();
@@ -42,23 +42,29 @@ public class Client extends Thread{
 		FileInputStream fin=new FileInputStream(file);
 		DataInputStream bin=new DataInputStream(fin);
 		if(!password.equals(bin.readUTF())) return false;///检查密码是否正确
-		user.clients.add(this);
+		user.addClient(this);
 		return true;
 	}
 	private boolean register(String name,String password) throws IOException{
 		System.out.println("register");
 		user=Main.users.get(name);
 		if(user!=null) return false;
-		File file=new File(Main.userFolder+name);
+		File file=new File(Main.userFolder+"/"+name);
 		file.mkdir();
-		file=new File(Main.userFolder+name+"/password");
+		//保存密码
+		file=new File(Main.userFolder+"/"+name+"/password");
 		file.createNewFile();
 		FileOutputStream fout=new FileOutputStream(file);
 		DataOutputStream bout=new DataOutputStream(fout);
 		bout.writeUTF(password);
+		//创建默认头像
+		Path source=Paths.get(Main.userFolder+"/defaultAvatar");
+		Path dest=Paths.get(Main.userFolder+"/"+name+"/avatar");
+		Files.copy(source,dest,StandardCopyOption.REPLACE_EXISTING);
+
 		user=new User(name);
 		Main.users.put(name,user);
-		user.clients.add(this);
+		user.addClient(this);
 		return true;
 	}
 	private void checkCaptcha() throws IOException{//验证码

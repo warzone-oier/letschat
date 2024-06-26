@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.classfile.BufWriter;
 import java.net.Socket;
 import java.text.ParseException;
 /**单个界面 */
@@ -327,7 +326,6 @@ class RegisterWindow extends AccountWindow{
 }
 public class StartWindow{
 	static JFrame frame;
-	static Font font;
 	static HelloWindow hello;
 	static LoginWindow login;
 	static RegisterWindow register;
@@ -337,11 +335,11 @@ public class StartWindow{
 		frame.setSize(500,400);
 		frame.setLocation(200,200);
 		frame.setLayout(null);
-		font=new Font("黑体", Font.BOLD, 10);
-		hello=new HelloWindow(frame, font);
-		login=new LoginWindow(frame, font);
-		register=new RegisterWindow(frame, font);
+		hello=new HelloWindow(frame, ClientMain.font);
+		login=new LoginWindow(frame, ClientMain.font);
+		register=new RegisterWindow(frame, ClientMain.font);
 		frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		hello.setVisible(true);
 	}
 	/** 如果显示，则转到开始画面，显示网络异常 */

@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Main{
 	static KeyPair keypair;
 	static HashMap<String,User> users;
-	static HashMap<Long,Group> groups;
+	static HashMap<Long,Chat> chats;
 	static void setPorts() throws Exception{
 		KeyPairGenerator keyPairGenerator;
 		keyPairGenerator=KeyPairGenerator.getInstance("RSA");

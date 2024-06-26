@@ -26,6 +26,7 @@ public class Main{
 	}
 	static final String userFolder="./users";
 	static void setUsers() throws Exception{
+		users=new HashMap<String,User>();
 		File file=new File(userFolder);
 		if(!file.isDirectory()){
 			if(file.isFile()) file.delete();
@@ -45,6 +46,12 @@ public class Main{
 			System.out.println("启动端口监听失败");
 			return;
 		}
-
+		try{
+			setUsers();
+			System.out.println("用户数据拉取成功");
+		}catch(Exception e){
+			System.out.println("用户数据拉取失败");
+			return;
+		}
 	}
 }

@@ -282,7 +282,11 @@ class LoginWindow extends AccountWindow{
 				ClientMain.server.send(name.get());
 				ClientMain.server.send(password.get());
 				byte command=ClientMain.server.receive()[0];
-				if(command==Network.success){
+				if(command==Network.longName)
+					sendError("用户名不得超过127个字符");
+				else if(command==Network.invaildName)
+					sendError("用户名不得含有空格及以下字符:"+Network.filter);
+				else if(command==Network.success){
 					sendError("登录成功");
 				}else sendError("用户名或密码错误");
 			}catch(IOException e){

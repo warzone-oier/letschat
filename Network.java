@@ -127,7 +127,7 @@ public class Network{
 		out=ImageIO.read(bin);
 		return out;
 	}
-
+	static public final String filter=" \"*?\\|/:";
 	//以下是发送的命令表
 	static public final byte changeCaptcha=0;
 	static public final byte checkCaptcha=1;
@@ -135,4 +135,6 @@ public class Network{
 	static public final byte failed=3;
 	static public final byte login=4;
 	static public final byte register=5;
+	static public final byte invaildName=6;
+	static public final byte longName=7;
 }

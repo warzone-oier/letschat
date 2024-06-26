@@ -263,9 +263,9 @@ abstract class AccountWindow extends Panel implements ActionListener{
 		else if(captcha.get().equals(""))
 			sendError("请输入验证码");
 		else try{Confirm();}
-		catch(IOException e1){
-			StartWindow.setVisble(true);
-		}
+			catch(IOException e1){
+				StartWindow.setVisble(true);
+			}
 	}
 }
 class LoginWindow extends AccountWindow{
@@ -280,12 +280,12 @@ class LoginWindow extends AccountWindow{
 				ClientMain.server.send(out);
 				ClientMain.server.send(name.get());
 				ClientMain.server.send(password.get());
-				byte command=ClientMain.server.receive()[0];
-				if(command==Network.longName)
+				byte[] command=ClientMain.server.receive();
+				if(command[0]==Network.longName)
 					sendError("用户名不得超过31个字符");
-				else if(command==Network.invaildName)
+				else if(command[0]==Network.invaildName)
 					sendError("用户名不得含有空格及以下字符:"+Network.filter);
-				else if(command==Network.success){
+				else if(command[0]==Network.success){
 					StartWindow.setVisble(false);
 					ClientMain.mainWindow.setVisble(true,name.get());
 					//sendError("登录成功");
@@ -315,12 +315,12 @@ class RegisterWindow extends AccountWindow{
 				ClientMain.server.send(out);
 				ClientMain.server.send(name.get());
 				ClientMain.server.send(password.get());
-				byte command=ClientMain.server.receive()[0];
-				if(command==Network.longName)
+				byte[] command=ClientMain.server.receive();
+				if(command[0]==Network.longName)
 					sendError("用户名不得超过31个字符");
-				else if(command==Network.invaildName)
+				else if(command[0]==Network.invaildName)
 					sendError("用户名不得含有空格及以下字符:"+Network.filter);
-				else if(command==Network.success){
+				else if(command[0]==Network.success){
 					StartWindow.setVisble(false);
 					ClientMain.mainWindow.setVisble(true,name.get());
 					//sendError("注册成功");

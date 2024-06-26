@@ -44,7 +44,6 @@ public class Client extends Thread{
 		FileInputStream fin=new FileInputStream(file);
 		DataInputStream bin=new DataInputStream(fin);
 		if(!password.equals(bin.readUTF())) return false;///检查密码是否正确
-		user.addClient(this);
 		return true;
 	}
 	/** 注册 */
@@ -67,7 +66,6 @@ public class Client extends Thread{
 
 		user=new User(name);
 		Main.users.put(name,user);
-		user.addClient(this);
 		return true;
 	}
 	/** 检查验证码 */
@@ -92,7 +90,6 @@ public class Client extends Thread{
 							return;
 						}else out[0]=Network.failed; 
 					}else if(register(name,password)){
-						System.out.println("***");
 						network.send(out);
 						return;
 					}else out[0]=network.failed;
@@ -106,6 +103,7 @@ public class Client extends Thread{
 	public void run(){
 		try{
 			checkCaptcha();
+			user.addClient(this);
 			while(true){//命令接收
 				byte[] command=network.receive();
 				if(command[0]==network.changeAvatar){

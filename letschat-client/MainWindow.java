@@ -163,29 +163,25 @@ public class MainWindow extends Thread{
 		splitPane.setVisible(aflag);
 		if(aflag){
 			profile.name.setText(name);
-			start();
+			try{
+				while(true){
+					byte[] command=ClientMain.server.receive();
+					if(command[0]==Network.onlineUser)
+						OnlineUser.addUser(ClientMain.server.receiveString());
+					else if(command[0]==Network.offlineUser)
+						OnlineUser.deleteUser(ClientMain.server.receiveString());
+					else{
+						name=ClientMain.server.receiveString();
+						String text=ClientMain.server.receiveString();
+						OnlineUser.sendText(name,text);
+					}
+				}
+			}catch(IOException e){
+				setVisble(false,"");
+			}
 		}else{
 			OnlineUser.setUnvisible();
 			StartWindow.setVisble(true);
-		}
-	}
-	/** 网络读取线程 */
-	public void run(){
-		try{
-			while(true){
-				byte[] command=ClientMain.server.receive();
-				if(command[0]==Network.onlineUser)
-					OnlineUser.addUser(ClientMain.server.receiveString());
-				else if(command[0]==Network.offlineUser)
-					OnlineUser.deleteUser(ClientMain.server.receiveString());
-				else{
-					String name=ClientMain.server.receiveString();
-					String text=ClientMain.server.receiveString();
-					OnlineUser.sendText(name,text);
-				}
-			}
-		}catch(IOException e){
-			setVisble(false,"");
 		}
 	}
 }

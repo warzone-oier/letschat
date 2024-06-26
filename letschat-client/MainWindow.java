@@ -91,10 +91,10 @@ class Bottom{
 	JScrollPane scrollPane;
 	JPanel panel;
 	Bottom(){
-		scrollPane=new JScrollPane();
 		panel=new JPanel();
 		scrollPane.setPreferredSize(new Dimension(300,700));
-		scrollPane.add(panel);
+		
+		scrollPane=new JScrollPane(panel);
 	}
 }
 public class MainWindow extends Thread{
@@ -123,11 +123,12 @@ public class MainWindow extends Thread{
 	/** 切换显示，若显示则拉取头像，若不显示转回登录画面 */
 	public void setVisble(boolean aflag,String name){
 		frame.setVisible(aflag);
+		splitPane.setVisible(aflag);
 		if(aflag){
 			try{
+				profile.name.setText(name);
 				BufferedImage image=ClientMain.server.receiveImage();
 				profile.setAvatar(image);
-				profile.name.setText(name);
 			}catch(IOException e){
 				frame.setVisible(false);
 				StartWindow.setVisble(true);

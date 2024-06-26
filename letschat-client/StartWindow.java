@@ -334,7 +334,7 @@ public class StartWindow{
 	StartWindow(){
 		frame=new JFrame("Hello LetsChat!");
 		frame.setResizable(false);
-		frame.setSize(400,300);
+		frame.setSize(500,400);
 		frame.setLocation(200,200);
 		frame.setLayout(null);
 		font=new Font("黑体", Font.BOLD, 10);

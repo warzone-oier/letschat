@@ -104,19 +104,11 @@ public class Client extends Thread{
 		try{
 			checkCaptcha();
 			user.addClient(this);
-			System.out.println("000");
 			while(true){//命令接收
 				byte[] command=network.receive();
-				System.out.println("111");
-				if(command[0]==Network.changeAvatar){
-					System.out.println("aaa");
-					BufferedImage image=network.receiveImage();
-					System.out.println("bbb");
-					user.changeAvatar(image);
-				}
 			}
 		}catch(IOException e){
-			return;
+			user.deleteClient(this);
 		}
 	}
 }

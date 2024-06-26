@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 public class Server extends Network{

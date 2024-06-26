@@ -1,4 +1,3 @@
-import java.awt.List;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -141,5 +140,6 @@ public class Network{
 	static public final byte register=5;
 	static public final byte invaildName=6;
 	static public final byte longName=7;
-	static public final byte changeAvatar=8;
+	static public final byte onlineUser=8;
+	static public final byte offlineUser=9;
 }

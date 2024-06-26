@@ -1,67 +1,96 @@
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import javax.imageio.ImageIO;
 public class User{//某个用户
 	String name;
+
 	private boolean lock;//用户锁（整个类的所有函数的读写同步）
 	private LinkedList<Client> clients;//用户所在的所有线程
-	private HashMap<Long,Chat> chatMap;  //用户所在的所有聊天
+	int onlineclient;
 	User(String id){
 		name=id;
 		clients=new LinkedList<Client>();
-		chatMap=new HashMap<Long,Chat>();
+		onlineclient=0;
 		lock=false;
 	}
 	/** 将客户端加入该用户， */
-	public synchronized void addClient(Client client){
-		while(lock);
-		lock=true;
-		clients.add(client);
-		try{
-			File file=new File(Main.userFolder+"/"+name+"/avatar");
-			BufferedImage image=ImageIO.read(file);
-			client.network.send(image);
-		}catch(IOException e){
-			e.printStackTrace();
-			//不可能有异常
-		}
-		lock=false;
-	}
-	/** 改头像 */
-	public synchronized void changeAvatar(BufferedImage image){
-		System.out.println("...");
-		while(lock);
-		lock=true;
-		System.out.println(">>>");
-		File file=new File(Main.userFolder+"/"+name+"/avatar");
-		file.delete();
-		file=new File(Main.userFolder+"/"+name+"/avatar");
-		try{
-			file.createNewFile();
-			ImageIO.write(image,"png", file);
-		}catch(IOException e){
-			e.printStackTrace();
-			lock=false;
-			return;//不可能有异常
-		}
-		System.out.println("***");
-		for(Iterator<Client> ite=clients.iterator();ite.hasNext();){
-			Client client=ite.next();
-			if(client.isAlive()){
-				byte[] command={Network.changeAvatar};
-				try{
-					client.network.send(command);
-					client.network.send(image);
-					System.out.println("...");
-				}catch(IOException e){//该方法由其他 client 发布
-					ite.remove();//连接超时，移除
+	public void addClient(Client client){
+		new Thread(){
+			public void run(){
+				while(lock);
+				lock=true;
+				clients.add(client);
+				if(onlineclient++==0) Main.addUser(name);
+				lock=false;
+				while(Main.userslock);
+				Main.userslock=true;
+				for(String name:Main.users.keySet()){
+					byte[] command={Network.onlineUser};
+					if(Main.users.get(name).onlineclient>0) try{
+						client.network.send(command);
+						client.network.send(name);
+					}catch(IOException e){
+						Main.userslock=false;
+						return;
+					}
 				}
-			}else ite.remove();
-		}
-		lock=false;
+				Main.userslock=false;
+			}
+		}.start();
+	}
+	/** 删除离线的客户端 */
+	public void deleteClient(Client client){
+		new Thread(){
+			public void run(){
+				while(lock);
+				lock=true;
+				for(Iterator<Client> ite=clients.iterator();ite.hasNext();){
+					Client get=ite.next();
+					if(get==client) ite.remove();
+				}
+				if(--onlineclient==0) Main.removeUser(name);
+				lock=false;
+			}
+		}.start();
+	}
+	/** 加入新在线用户 */
+	public void addUser(String name){
+		new Thread(){
+			public void run(){
+				while(lock);
+				lock=true;
+				for(Client client:clients){
+					byte[] command={Network.onlineUser};
+					try{
+						client.network.send(command);
+						client.network.send(name);
+					}catch(Exception e){
+						lock=false;
+						return;
+					}
+				}
+				lock=false;
+			}
+		}.start();
+	}
+	/** 删除新在线用户 */
+	public void removeUser(String name){
+		new Thread(){
+			public void run(){
+				while(lock);
+				lock=true;
+				for(Client client:clients){
+					byte[] command={Network.offlineUser};
+					try{
+						client.network.send(command);
+						client.network.send(name);
+					}catch(Exception e){
+						lock=false;
+						return;
+					}
+				}
+				lock=false;
+			}
+		}.start();
 	}
 }

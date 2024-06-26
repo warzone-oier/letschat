@@ -3,8 +3,6 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -12,8 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
-import java.util.jar.Attributes.Name;
+import java.util.HashMap;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -41,65 +39,43 @@ class ErrorWindow{
 		frame.add(label);
 	}
 }
-class Profile implements ActionListener{
-	JLabel avatar,name;
-	JButton settings;
+class Profile{
+	JLabel name;
 	JPanel panel;
 	Profile(){
 		panel=new JPanel();
 		panel.setPreferredSize(new Dimension(300, 75));
 		panel.setLayout(new FlowLayout());
-		avatar=new JLabel();
 		name=new JLabel();
 		name.setFont(new Font("黑体", Font.BOLD, 20));
-		settings=new JButton("更改头像");
-		settings.setFont(new Font("黑体", Font.BOLD, 15));
-		panel.add(avatar);
 		panel.add(name);
-		panel.add(settings);
-		settings.addActionListener(this);
 	}
-	/** 设置头像 */
-	public void setAvatar(BufferedImage image){
-		Image scaledimage=image.getScaledInstance(50,50,Image.SCALE_SMOOTH);
-		avatar.setIcon(new ImageIcon(scaledimage));
-	}
-	public void actionPerformed(ActionEvent e){
-		FileDialog fileDialog=new FileDialog(MainWindow.frame, "选择图片", FileDialog.LOAD);
-		fileDialog.setVisible(true);
-		String filename=fileDialog.getFile(); 
-		if(filename!=null){
-			String directory=fileDialog.getDirectory();
-			File file=new File(directory+filename);
-			BufferedImage image;
-			try{
-				image=ImageIO.read(file);
-			}catch(IOException e1){
-				ErrorWindow error=new ErrorWindow("错误：不支持的文件格式");
-				return;
-			}
-			try{
-				byte[] command={Network.changeAvatar};
-				System.out.println("aaa");
-				ClientMain.server.send(command);
-				System.out.println("***");
-				ClientMain.server.send(image);
-				//发送改头像信息，由服务器的反馈改服务端头像
-				System.out.println("...");
-			}catch(IOException e1){
-				e1.printStackTrace();
-				ClientMain.mainWindow.setVisble(false, "");
-			}
-		}
+}
+class Friend{
+	JButton button;
+	Friend(String name){
+		button=new JButton(name);
+		button.setFont(new Font("黑体", Font.BOLD, 20));
 	}
 }
 class Bottom{
 	JScrollPane scrollPane;
 	JPanel panel;
+	HashMap<String,Friend> friends;
 	Bottom(){
 		panel=new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		scrollPane=new JScrollPane(panel);
 		scrollPane.setPreferredSize(new Dimension(300,725));
+	}
+	public void addUser(String name){
+		Friend friend=new Friend(name);
+		friends.put(name,friend);
+		panel.add(friend.button);
+	}
+	public void deleteUser(String name){
+		panel.remove(friends.get(name).button);
+		friends.remove(name);
 	}
 }
 public class MainWindow extends Thread{
@@ -129,16 +105,8 @@ public class MainWindow extends Thread{
 		frame.setVisible(aflag);
 		splitPane.setVisible(aflag);
 		if(aflag){
-			try{
-				BufferedImage image=ClientMain.server.receiveImage();
-				profile.name.setText(name);
-				profile.setAvatar(image);
-			}catch(IOException e){
-				frame.setVisible(false);
-				StartWindow.setVisble(true);
-				return;
-			}
-			//start();
+			profile.name.setText(name);
+			start();
 		}else StartWindow.setVisble(true);
 	}
 	/** 网络读取线程 */
@@ -146,8 +114,10 @@ public class MainWindow extends Thread{
 		try{
 			while(true){
 				byte[] command=ClientMain.server.receive();
-				if(command[0]==Network.changeAvatar)
-					profile.setAvatar(ClientMain.server.receiveImage());
+				if(command[0]==Network.onlineUser)
+					bottom.addUser(ClientMain.server.receiveString());
+				else if(command[0]==Network.offlineUser)
+					bottom.deleteUser(ClientMain.server.receiveString());
 			}
 		}catch(IOException e){
 			setVisble(false,"");

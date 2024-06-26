@@ -50,7 +50,7 @@ class TextArea{
 		panel=new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		area=new JTextArea();
-		area.setSize(800, 150);
+		area.setSize(800, 100);
 		area.setFont(new Font("黑体", Font.PLAIN, 10));
 		send=new JButton("发送");
 		send.setFont(new Font("黑体", Font.PLAIN, 10));

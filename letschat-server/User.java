@@ -23,9 +23,7 @@ public class User{//某个用户
 		clients.add(client);
 		try{
 			File file=new File(Main.userFolder+"/"+name+"/avatar");
-			System.out.println("...");
 			BufferedImage image=ImageIO.read(file);
-			System.out.println(">>>");
 			client.network.send(image);
 		}catch(IOException e){
 			e.printStackTrace();
@@ -55,6 +53,7 @@ public class User{//某个用户
 				try{
 					client.network.send(command);
 					client.network.send(image);
+					System.out.println("...");
 				}catch(IOException e){//该方法由其他 client 发布
 					ite.remove();//连接超时，移除
 				}

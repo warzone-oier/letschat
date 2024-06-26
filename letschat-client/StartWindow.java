@@ -249,6 +249,25 @@ abstract class AccountWindow extends Panel implements ActionListener{
 		return false;
 	}
 	abstract protected void Confirm() throws IOException;
+	protected void finalConfirm(byte cmd,String error) throws IOException{
+		byte[] out={cmd};
+		ClientMain.server.send(out);
+		ClientMain.server.send(name.get());
+		ClientMain.server.send(password.get());
+		byte[] command=ClientMain.server.receive();
+		if(command[0]==Network.success){
+			StartWindow.setVisble(false);
+			ClientMain.mainWindow.setVisble(true,name.get());
+			//sendError("登录成功");
+		}else{
+			captcha.label.setIcon(new ImageIcon(ClientMain.server.receiveImage()));
+			if(command[0]==Network.longName)
+				sendError("用户名不得超过31个字符");
+			else if(command[0]==Network.invaildName)
+				sendError("用户名不得含有空格及以下字符:"+Network.filter);
+			else sendError(error);
+		}
+	}
 	public void actionPerformed(ActionEvent e){
 		if((JButton)(e.getSource())==cancel){//取消
 			setVisible(false);
@@ -274,26 +293,7 @@ class LoginWindow extends AccountWindow{
 	}
 	protected void Confirm() throws IOException{
 		if(!captcha.check()) sendError("验证码错误");
-		else{
-			try{
-				byte[] out={Network.login};
-				ClientMain.server.send(out);
-				ClientMain.server.send(name.get());
-				ClientMain.server.send(password.get());
-				byte[] command=ClientMain.server.receive();
-				if(command[0]==Network.longName)
-					sendError("用户名不得超过31个字符");
-				else if(command[0]==Network.invaildName)
-					sendError("用户名不得含有空格及以下字符:"+Network.filter);
-				else if(command[0]==Network.success){
-					StartWindow.setVisble(false);
-					ClientMain.mainWindow.setVisble(true,name.get());
-					//sendError("登录成功");
-				}else sendError("用户名或密码错误");
-			}catch(IOException e){
-				StartWindow.setVisble(true);
-			}
-		}
+		else finalConfirm(Network.login, "用户名或密码错误");
 	}
 }
 class RegisterWindow extends AccountWindow{
@@ -309,27 +309,7 @@ class RegisterWindow extends AccountWindow{
 			sendError("两次输入密码不相同");
 		else if(!captcha.check())
 			sendError("验证码错误");
-		else{
-			try{
-				byte[] out={Network.register};
-				ClientMain.server.send(out);
-				ClientMain.server.send(name.get());
-				ClientMain.server.send(password.get());
-				byte[] command=ClientMain.server.receive();
-				if(command[0]==Network.longName)
-					sendError("用户名不得超过31个字符");
-				else if(command[0]==Network.invaildName)
-					sendError("用户名不得含有空格及以下字符:"+Network.filter);
-				else if(command[0]==Network.success){
-					StartWindow.setVisble(false);
-					ClientMain.mainWindow.setVisble(true,name.get());
-					//sendError("注册成功");
-				}else sendError("用户名已存在");
-			}catch(IOException e){
-				StartWindow.setVisble(true);
-			}
-			
-		}
+		else finalConfirm(Network.register, "用户名已存在");
 	}
 }
 public class StartWindow{

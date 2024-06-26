@@ -37,7 +37,7 @@ public class Client extends Thread{
 	}
 	/** 登录 */
 	private boolean login(String name,String password) throws IOException{
-		System.out.println("login");
+		//System.out.println("login");
 		user=Main.users.get(name);
 		if(user==null) return false;
 		File file=new File(Main.userFolder+"/"+name+"/password");
@@ -48,7 +48,7 @@ public class Client extends Thread{
 	}
 	/** 注册 */
 	private boolean register(String name,String password) throws IOException{
-		System.out.println("register");
+		//System.out.println("register");
 		user=Main.users.get(name);
 		if(user!=null) return false;
 		File file=new File(Main.userFolder+"/"+name);

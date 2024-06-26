@@ -35,7 +35,8 @@ class ErrorWindow{
 		frame.setLayout(new GridLayout(1, 1));
 		frame.setVisible(true);
 		label=new JLabel(text);
-		label.setFont(ClientMain.font);
+		label.setFont(new Font("黑体", Font.BOLD, 20));
+
 		label.setForeground(Color.red);
 		frame.add(label);
 	}
@@ -50,8 +51,9 @@ class Profile implements ActionListener{
 		panel.setLayout(new FlowLayout());
 		avatar=new JLabel();
 		name=new JLabel();
-		name.setFont(ClientMain.font);
+		name.setFont(new Font("黑体", Font.BOLD, 20));
 		settings=new JButton("更改头像");
+		settings.setFont(new Font("黑体", Font.BOLD, 20));
 		panel.add(avatar);
 		panel.add(name);
 		panel.add(settings);
@@ -107,7 +109,6 @@ public class MainWindow extends Thread{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(300,800);
 		frame.setLocation(100,100);
-		frame.setLayout(null);
 		frame.setVisible(false);
 		
 		profile=new Profile();
@@ -126,7 +127,6 @@ public class MainWindow extends Thread{
 		if(aflag){
 			try{
 				BufferedImage image=ClientMain.server.receiveImage();
-				System.out.println("...");
 				profile.name.setText(name);
 				profile.setAvatar(image);
 			}catch(IOException e){

@@ -35,6 +35,7 @@ class ScrollPanel{
 		scrollPane=new JScrollPane(panel);
 		scrollPane.setPreferredSize(new Dimension(width,height));
 	}
+	/** 刷新窗口 */
 	void sendText(String name,String text){
 		JLabel dialog=new JLabel(name+":"+text);
 		dialog.setFont(new Font("黑体",Font.PLAIN,15));
@@ -94,12 +95,15 @@ class Friend implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 		if((JButton)(e.getSource())==visit)
 			frame.setVisible(true);
-		else try{
+		else try{//发送按钮
 			String text=textarea.area.getText();
-			dialog.sendText(ClientMain.mainWindow.name,text);
+			textarea.area.setText("");
+			dialog.sendText(ClientMain.mainWindow.name,text);//自己说的
+			frame.setVisible(false);
+			frame.setVisible(true);
 			byte[] command={Network.sendmassage};
 			ClientMain.server.send(command);
-			ClientMain.server.send(ClientMain.mainWindow.name);
+			ClientMain.server.send(name);//发给别人的
 			ClientMain.server.send(text);
 		}catch(IOException e1){
 			ClientMain.mainWindow.setVisble(false,"");
@@ -135,10 +139,10 @@ class OnlineUser extends ScrollPanel{
 			ClientMain.mainWindow.frame.setVisible(true);
 		}
 	}
-	public void sendText(String name,String text){
+	public void sendText(String name,String text){//别人发给自己消息
 		Friend friend=friends.get(name);
 		if(friend!=null)
-			friend.dialog.sendText(MainWindow.name,text);
+			friend.dialog.sendText(name,text);
 	}
 	public void setUnvisible(){
 		for(String name:friends.keySet())

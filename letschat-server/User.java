@@ -70,16 +70,13 @@ public class User{//某个用户
 				if(bef!=null) try{
 					bef.join();
 				}catch(InterruptedException e){}
-				
-				System.out.println(s+" addUser*"+name);
 				for(Client client:clients){
 					byte[] command={Network.onlineUser};
 					try{
-						System.out.println("***");client.network.send(command);
-						System.out.println("***");client.network.send(s);
+						client.network.send(command);
+						client.network.send(s);
 					}catch(Exception e){}
 				}
-				System.out.println(s+" addUser "+name);
 			}
 		}.start();
 	}
@@ -91,7 +88,6 @@ public class User{//某个用户
 				if(bef!=null) try{
 					bef.join();
 				}catch(InterruptedException e){}
-				System.out.println(s+" removeUser*"+name);
 				for(Client client:clients){
 					byte[] command={Network.offlineUser};
 					try{
@@ -99,7 +95,6 @@ public class User{//某个用户
 						client.network.send(s);
 					}catch(Exception e){}
 				}
-				System.out.println(s+" removeUser"+name);
 			}
 		}.start();
 	}
@@ -107,7 +102,6 @@ public class User{//某个用户
 		Main.users.get(receiver).receive(name, text);
 	}
 	public void receive(String sender,String text){
-		System.out.println("send from "+sender+" to "+name);
 		new Thread(){
 			public void run(){
 				Thread bef=setLock(this);
@@ -122,7 +116,6 @@ public class User{//某个用户
 						client.network.send(text);
 					}catch(Exception e){}
 				}
-				System.out.println("*send from"+sender+" to "+name);
 			}
 		}.start();
 	}

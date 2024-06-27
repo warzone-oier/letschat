@@ -12,6 +12,7 @@ public class Main{
 	static Thread now;
 	static final String userFolder="./users";
 	static void setUsers() throws Exception{
+		online=new HashSet<String>();
 		users=new HashMap<String,User>();
 		File file=new File(userFolder);
 		if(!file.isDirectory()){
@@ -33,7 +34,7 @@ public class Main{
 	static void flushOnline(){
 		System.out.println("当前在线用户有：");
 		for(String name:online)
-			System.out.println("name");
+			System.out.println(name);
 		System.out.println("");
 	}
 	static void addUser(String name){

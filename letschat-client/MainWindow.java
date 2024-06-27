@@ -139,7 +139,8 @@ class OnlineUser extends ScrollPanel{
 			ClientMain.mainWindow.frame.setVisible(true);
 		}
 	}
-	public void sendText(String name,String text){//别人发给自己消息
+	/** 别人发给自己消息*/
+	public void sendText(String name,String text){
 		Friend friend=friends.get(name);
 		if(friend!=null)
 			friend.dialog.sendText(name,text);
@@ -193,17 +194,17 @@ public class MainWindow extends Thread{
 				byte[] command=ClientMain.server.receive();
 				setPriority(MAX_PRIORITY);
 				System.out.println("rrrr");
-				String name=ClientMain.server.receiveString();
-				System.out.println(name);
+				String sender=ClientMain.server.receiveString();
+				System.out.println(sender);
 				if(command[0]==Network.onlineUser)
-					SwingUtilities.invokeLater(()->onlineUser.addUser(name));
+					SwingUtilities.invokeLater(()->onlineUser.addUser(sender));
 				else if(command[0]==Network.offlineUser)
-					SwingUtilities.invokeLater(()->onlineUser.deleteUser(name));
+					SwingUtilities.invokeLater(()->onlineUser.deleteUser(sender));
 				else{
 					System.out.println("...");
 					String text=ClientMain.server.receiveString();
 					System.out.println("....");
-					SwingUtilities.invokeLater(()->onlineUser.sendText(name,text));
+					SwingUtilities.invokeLater(()->onlineUser.sendText(sender,text));
 				}
 				setPriority(5);
 				System.out.println("rrrrrr");

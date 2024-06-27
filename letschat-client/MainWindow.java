@@ -111,7 +111,7 @@ class Friend implements ActionListener{
 	}
 }
 class OnlineUser extends ScrollPanel{
-	HashMap<String,Friend> friends;
+	private HashMap<String,Friend> friends;
 	OnlineUser(){
 		super(300,725);
 		friends=new HashMap<String,Friend>();

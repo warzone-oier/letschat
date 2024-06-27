@@ -1,15 +1,7 @@
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
+import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -60,14 +52,11 @@ public class Network{
 	}
 	public boolean disconnect(){
 		try{input.close();}
-		catch(IOException e){
-			return true;}
-		try{output.close();
-		}catch(IOException e){
-			return true;}
+		catch(IOException e){return true;}
+		try{output.close();}
+		catch(IOException e){return true;}
 		try{socket.close();}
-		catch(IOException e){
-			return true;}
+		catch(IOException e){return true;}
 		input=null;
 		output=null;
 		socket=null;
@@ -100,7 +89,6 @@ public class Network{
 		try{
 			cipher=Cipher.getInstance("RSA");
 			cipher.init(Cipher.ENCRYPT_MODE,publickey);
-
 			code=crypt(cipher,s,245);
 		}catch(Exception e){
 			e.printStackTrace();

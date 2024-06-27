@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.security.KeyFactory;
 import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
@@ -20,7 +22,17 @@ public class Network{
 	private Socket socket;
 	private DataInputStream input;
 	private DataOutputStream output;
-	Network(){}
+	public static KeyPair generateKeyPair(){
+		KeyPairGenerator keyPairGenerator;
+		try{
+			keyPairGenerator=KeyPairGenerator.getInstance("RSA");
+			keyPairGenerator.initialize(2048);
+			return keyPairGenerator.generateKeyPair();
+		}catch(NoSuchAlgorithmException e){
+			e.printStackTrace();
+			return null;
+		}
+	}
 	/**传入对应的 socket，初始化输入输出流，发生异常返回 true*/
 	public boolean connect(Socket s){
 		try{

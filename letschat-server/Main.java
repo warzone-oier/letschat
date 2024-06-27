@@ -30,7 +30,6 @@ public class Main{
 		now=next;
 		return bef;
 	}
-	
 	static void flushOnline(){
 		System.out.println("当前在线用户有：");
 		for(String name:online)
@@ -66,11 +65,6 @@ public class Main{
 		}.start();
 	}
 	static void setPorts() throws Exception{
-		KeyPairGenerator keyPairGenerator;
-		keyPairGenerator=KeyPairGenerator.getInstance("RSA");
-		keyPairGenerator.initialize(2048);
-		keypair=keyPairGenerator.generateKeyPair();
-
 		FileInputStream fin=new FileInputStream("ports.data");
 		Scanner scan=new Scanner(fin);
 		while(scan.hasNext()){
@@ -83,6 +77,7 @@ public class Main{
 		scan.close();
 	}
 	public static void main(String args[]){
+		keypair=Network.generateKeyPair();
 		try{
 			setUsers();
 			System.out.println("用户数据拉取成功");

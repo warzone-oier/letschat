@@ -117,16 +117,13 @@ class OnlineUser extends ScrollPanel{
 		friends=new HashMap<String,Friend>();
 	}
 	public void addUser(String name){
-		//System.out.println("^^^");//调试代码
 		if(friends.get(name)==null){
-			//System.out.println(name);//调试代码
 			Friend friend=new Friend(name);
 			friends.put(name,friend);
 			panel.add(friend.visit);
 			ClientMain.mainWindow.frame.setVisible(false);
 			ClientMain.mainWindow.frame.setVisible(true);
 		}
-		//System.out.println(">>>");//调试代码
 	}
 	public void deleteUser(String name){
 		Friend friend=friends.get(name);

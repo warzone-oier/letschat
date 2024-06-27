@@ -91,16 +91,15 @@ class Friend implements ActionListener{
 		splitPane.setEnabled(false);
 		frame.add(splitPane);
 	}
-	/** 切换到聊天窗口 */
 	public void actionPerformed(ActionEvent e){
 		if((JButton)(e.getSource())==visit)
 			frame.setVisible(true);
 		else try{
 			String text=textarea.area.getText();
-			dialog.sendText(name,text);
+			dialog.sendText(ClientMain.mainWindow.name,text);
 			byte[] command={Network.sendmassage};
 			ClientMain.server.send(command);
-			ClientMain.server.send(name);
+			ClientMain.server.send(ClientMain.mainWindow.name);
 			ClientMain.server.send(text);
 		}catch(IOException e1){
 			ClientMain.mainWindow.setVisble(false,"");
@@ -138,17 +137,8 @@ class OnlineUser extends ScrollPanel{
 	}
 	public void sendText(String name,String text){
 		Friend friend=friends.get(name);
-		if(friend!=null){
+		if(friend!=null)
 			friend.dialog.sendText(MainWindow.name,text);
-			byte[] command={Network.sendmassage};
-			try{
-				ClientMain.server.send(command);
-				ClientMain.server.send(name);
-				ClientMain.server.send(text);
-			}catch(IOException e){
-				ClientMain.mainWindow.setVisble(false,"");
-			}
-		}
 	}
 	public void setUnvisible(){
 		for(String name:friends.keySet())

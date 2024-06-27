@@ -49,7 +49,7 @@ public class Main{
 					System.out.println(s);
 					users.get(s).addUser(name);
 				}
-					
+				flushOnline();
 			}
 		}.start();
 	}
@@ -63,6 +63,7 @@ public class Main{
 				online.remove(name);
 				for(String s:users.keySet()) if(!s.equals(name))
 					users.get(s).removeUser(name);
+				flushOnline();
 			}
 		}.start();
 	}

@@ -84,20 +84,22 @@ public class User{//某个用户
 		}.start();
 	}
 	/** 删除新在线用户 */
-	public void removeUser(String name){
+	public void removeUser(String s){
 		new Thread(){
 			public void run(){
 				Thread bef=setLock(this);
 				if(bef!=null) try{
 					bef.join();
 				}catch(InterruptedException e){}
+				System.out.println(s+" removeUser*"+name);
 				for(Client client:clients){
 					byte[] command={Network.offlineUser};
 					try{
 						client.network.send(command);
-						client.network.send(name);
+						client.network.send(s);
 					}catch(Exception e){}
 				}
+				System.out.println(s+" removeUser"+name);
 			}
 		}.start();
 	}

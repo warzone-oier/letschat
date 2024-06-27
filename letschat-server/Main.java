@@ -62,6 +62,8 @@ public class Main{
 					bef.join();
 				}catch(InterruptedException e){}
 				online.remove(name);
+				
+				System.out.println("removeUser"+name);
 				for(String s:users.keySet()) if(!s.equals(name))
 					users.get(s).removeUser(name);
 				flushOnline();

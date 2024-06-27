@@ -6,10 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.KeyPair;
 public class Client extends Thread{
 	public Network network;
@@ -60,11 +56,6 @@ public class Client extends Thread{
 		FileOutputStream fout=new FileOutputStream(file);
 		DataOutputStream bout=new DataOutputStream(fout);
 		bout.writeUTF(password);
-		//创建默认头像
-		Path source=Paths.get(Main.userFolder+"/defaultAvatar");
-		Path dest=Paths.get(Main.userFolder+"/"+name+"/avatar");
-		Files.copy(source,dest,StandardCopyOption.REPLACE_EXISTING);
-
 		user=new User(name);
 		new Thread(){
 			public void run(){
@@ -75,7 +66,6 @@ public class Client extends Thread{
 				Main.users.put(name,user);
 			}
 		}.start();
-		
 		return true;
 	}
 	/** 检查验证码 */

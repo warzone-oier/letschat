@@ -98,7 +98,7 @@ class Friend implements ActionListener{
 		else try{//发送按钮
 			String text=textarea.area.getText();
 			textarea.area.setText("");
-			dialog.sendText(ClientMain.mainWindow.name,text);//自己说的
+			dialog.sendText(MainWindow.name,text);//自己说的
 			frame.setVisible(false);
 			frame.setVisible(true);
 			byte[] command={Network.sendmassage};
@@ -121,8 +121,8 @@ class OnlineUser extends ScrollPanel{
 			Friend friend=new Friend(name);
 			friends.put(name,friend);
 			panel.add(friend.visit);
-			ClientMain.mainWindow.frame.setVisible(false);
-			ClientMain.mainWindow.frame.setVisible(true);
+			MainWindow.frame.setVisible(false);
+			MainWindow.frame.setVisible(true);
 		}
 	}
 	public void deleteUser(String name){
@@ -132,8 +132,8 @@ class OnlineUser extends ScrollPanel{
 			panel.repaint();
 			friend.frame.setVisible(false);
 			friends.remove(name);
-			ClientMain.mainWindow.frame.setVisible(false);
-			ClientMain.mainWindow.frame.setVisible(true);
+			MainWindow.frame.setVisible(false);
+			MainWindow.frame.setVisible(true);
 		}
 	}
 	/** 别人发给自己消息*/

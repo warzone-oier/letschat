@@ -1,4 +1,3 @@
-import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -34,18 +33,17 @@ public class Client extends Thread{
 	}
 	/** 登录 */
 	private boolean login(String name,String password) throws IOException{
-		//System.out.println("login");
 		user=Main.users.get(name);
 		if(user==null) return false;
 		File file=new File(Main.userFolder+"/"+name+"/password");
 		FileInputStream fin=new FileInputStream(file);
-		DataInputStream bin=new DataInputStream(fin);
-		if(!password.equals(bin.readUTF())) return false;///检查密码是否正确
+		try(DataInputStream bin=new DataInputStream(fin)){
+			if(!password.equals(bin.readUTF())) return false;///检查密码是否正确
+		}
 		return true;
 	}
 	/** 注册 */
 	private boolean register(String name,String password) throws IOException{
-		//System.out.println("register");
 		user=Main.users.get(name);
 		if(user!=null) return false;
 		File file=new File(Main.userFolder+"/"+name);
@@ -54,8 +52,9 @@ public class Client extends Thread{
 		file=new File(Main.userFolder+"/"+name+"/password");
 		file.createNewFile();
 		FileOutputStream fout=new FileOutputStream(file);
-		DataOutputStream bout=new DataOutputStream(fout);
-		bout.writeUTF(password);
+		try (DataOutputStream bout=new DataOutputStream(fout)) {
+			bout.writeUTF(password);
+		}
 		user=new User(name);
 		new Thread(){
 			public void run(){
@@ -92,7 +91,7 @@ public class Client extends Thread{
 					}else if(register(name,password)){
 						network.send(out);
 						return;
-					}else out[0]=network.failed;
+					}else out[0]=Network.failed;
 				}else out[0]=Network.failed;
 				network.send(out);
 			}

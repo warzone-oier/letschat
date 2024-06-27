@@ -86,9 +86,10 @@ class HelloWindow extends Panel implements ActionListener{
 			if(file.exists()){
 				try {
 					FileInputStream fin=new FileInputStream(file);
-					DataInputStream in=new DataInputStream(fin);
-					ip.set(in.readUTF());
-					port.set(in.readUTF());
+					try(DataInputStream in=new DataInputStream(fin)) {
+						ip.set(in.readUTF());
+						port.set(in.readUTF());
+					}
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -153,9 +154,10 @@ class HelloWindow extends Panel implements ActionListener{
 		}
 		try{
 			FileOutputStream fout=new FileOutputStream(file);
-			DataOutputStream out=new DataOutputStream(fout);
-			out.writeUTF(ip.get());
-			out.writeUTF(port.get());
+			try (DataOutputStream out = new DataOutputStream(fout)) {
+				out.writeUTF(ip.get());
+				out.writeUTF(port.get());
+			}
 		}catch(Exception e1){
 			e1.printStackTrace();
 		}

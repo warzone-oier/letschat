@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -66,15 +65,16 @@ public class Main{
 	}
 	static void setPorts() throws Exception{
 		FileInputStream fin=new FileInputStream("ports.data");
-		Scanner scan=new Scanner(fin);
-		while(scan.hasNext()){
-			int port=scan.nextInt();
-			if(port<0||port>=65536) throw new Exception();
-			PortListener listener=new PortListener(port);
-			listener.setPriority(1);
-			listener.start();
+		try(Scanner scan=new Scanner(fin)){
+			while(scan.hasNext()){
+				int port=scan.nextInt();
+				if(port<0||port>=65536) throw new Exception();
+				PortListener listener=new PortListener(port);
+				listener.setPriority(1);
+				listener.start();
+			}
+			scan.close();
 		}
-		scan.close();
 	}
 	public static void main(String args[]){
 		keypair=Network.generateKeyPair();

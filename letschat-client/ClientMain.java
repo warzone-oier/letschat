@@ -1,6 +1,4 @@
 import java.awt.Font;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 public class ClientMain{
 	public static Font font;
 	public static Network server;

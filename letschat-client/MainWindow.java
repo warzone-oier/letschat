@@ -148,7 +148,7 @@ class OnlineUser extends ScrollPanel{
 public class MainWindow extends Thread{
 	static JFrame frame;
 	static Profile profile;
-	static OnlineUser OnlineUser;
+	static OnlineUser onlineUser;
 	static JSplitPane splitPane;
 	static String name;
 	MainWindow(){
@@ -160,10 +160,10 @@ public class MainWindow extends Thread{
 		frame.setVisible(false);
 		
 		profile=new Profile();
-		OnlineUser=new OnlineUser();
+		onlineUser=new OnlineUser();
 
 		splitPane=new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-			profile.panel,OnlineUser.scrollPane);
+			profile.panel,onlineUser.scrollPane);
 		splitPane.setDividerLocation(75);
 		splitPane.setEnabled(false);
 		frame.add(splitPane);
@@ -177,7 +177,7 @@ public class MainWindow extends Thread{
 			profile.name.setText(s);
 			start();
 		}else{
-			OnlineUser.setUnvisible();
+			onlineUser.setUnvisible();
 			StartWindow.setVisble(true);
 		}
 	}
@@ -192,14 +192,14 @@ public class MainWindow extends Thread{
 				String name=ClientMain.server.receiveString();
 				System.out.println(name);
 				if(command[0]==Network.onlineUser)
-					SwingUtilities.invokeLater(()->OnlineUser.addUser(name));
+					SwingUtilities.invokeLater(()->onlineUser.addUser(name));
 				else if(command[0]==Network.offlineUser)
-					SwingUtilities.invokeLater(()->OnlineUser.deleteUser(name));
+					SwingUtilities.invokeLater(()->onlineUser.deleteUser(name));
 				else{
 					System.out.println("...");
 					String text=ClientMain.server.receiveString();
 					System.out.println("....");
-					SwingUtilities.invokeLater(()->OnlineUser.sendText(name,text));
+					SwingUtilities.invokeLater(()->onlineUser.sendText(name,text));
 				}
 				setPriority(5);
 				System.out.println("rrrrrr");

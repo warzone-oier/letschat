@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 class Profile{
 	JLabel name;
 	JPanel panel;
@@ -36,8 +37,10 @@ class ScrollPanel{
 	}
 	void sendText(String name,String text){
 		JLabel dialog=new JLabel(name+":"+text);
-		dialog.setFont(new Font("黑体",Font.PLAIN,10));
-		panel.add(new JLabel());
+		dialog.setFont(new Font("黑体",Font.PLAIN,15));
+		panel.add(dialog);
+		panel.setVisible(false);
+		panel.setVisible(true);
 	}
 }
 class TextArea{
@@ -49,9 +52,8 @@ class TextArea{
 		name=s;
 		panel=new JPanel();
 		panel.setPreferredSize(new Dimension(800,200));
-		//panel.setLayout(new FlowLayout());
 		area=new JTextArea(5, 50);
-		area.setFont(new Font("黑体", Font.PLAIN, 10));
+		area.setFont(new Font("黑体", Font.PLAIN, 15));
 		send=new JButton("发送");
 		send.setFont(new Font("黑体", Font.PLAIN, 10));
 		panel.add(area);
@@ -112,23 +114,41 @@ class OnlineUser extends ScrollPanel{
 		friends=new HashMap<String,Friend>();
 	}
 	public void addUser(String name){
+		System.out.println("^^^");
 		if(friends.get(name)==null){
+			System.out.println(name);
 			Friend friend=new Friend(name);
 			friends.put(name,friend);
 			panel.add(friend.visit);
+			ClientMain.mainWindow.frame.setVisible(false);
+			ClientMain.mainWindow.frame.setVisible(true);
 		}
+		System.out.println(">>>");
 	}
 	public void deleteUser(String name){
 		Friend friend=friends.get(name);
 		if(friend!=null){
 			panel.remove(friends.get(name).visit);
+			panel.repaint();
 			friend.frame.setVisible(false);
 			friends.remove(name);
+			ClientMain.mainWindow.frame.setVisible(false);
+			ClientMain.mainWindow.frame.setVisible(true);
 		}
 	}
 	public void sendText(String name,String text){
 		Friend friend=friends.get(name);
-		if(friend!=null) friend.dialog.sendText(name,text);
+		if(friend!=null){
+			friend.dialog.sendText(MainWindow.name,text);
+			byte[] command={Network.sendmassage};
+			try{
+				ClientMain.server.send(command);
+				ClientMain.server.send(name);
+				ClientMain.server.send(text);
+			}catch(IOException e){
+				ClientMain.mainWindow.setVisble(false,"");
+			}
+		}
 	}
 	public void setUnvisible(){
 		for(String name:friends.keySet())
@@ -140,6 +160,7 @@ public class MainWindow extends Thread{
 	static Profile profile;
 	static OnlineUser OnlineUser;
 	static JSplitPane splitPane;
+	static String name;
 	MainWindow(){
 		frame=new JFrame("");
 		frame.setResizable(false);
@@ -158,12 +179,12 @@ public class MainWindow extends Thread{
 		frame.add(splitPane);
 	}
 	/** 切换显示，若不显示转回登录画面 */
-	public void setVisble(boolean aflag,String name){
+	public void setVisble(boolean aflag,String s){
 		frame.setVisible(aflag);
 		splitPane.setVisible(aflag);
 		if(aflag){
-			profile.name.setText(name);
-			setPriority(MAX_PRIORITY);
+			name=s;
+			profile.name.setText(s);
 			start();
 		}else{
 			OnlineUser.setUnvisible();
@@ -174,16 +195,25 @@ public class MainWindow extends Thread{
 	public void run(){
 		try{
 			while(true){
+				System.out.println("rrr");
 				byte[] command=ClientMain.server.receive();
+				setPriority(MAX_PRIORITY);
+				System.out.println("rrrr");
+				String name=ClientMain.server.receiveString();
+				System.out.println(name);
 				if(command[0]==Network.onlineUser)
-					OnlineUser.addUser(ClientMain.server.receiveString());
+					SwingUtilities.invokeLater(()->OnlineUser.addUser(name));
 				else if(command[0]==Network.offlineUser)
-					OnlineUser.deleteUser(ClientMain.server.receiveString());
+					SwingUtilities.invokeLater(()->OnlineUser.deleteUser(name));
 				else{
-					String name=ClientMain.server.receiveString();
+					System.out.println("...");
 					String text=ClientMain.server.receiveString();
-					OnlineUser.sendText(name,text);
+					System.out.println("....");
+					SwingUtilities.invokeLater(()->OnlineUser.sendText(name,text));
 				}
+				setPriority(5);
+				System.out.println("rrrrrr");
+				
 			}
 		}catch(IOException e){
 			setVisble(false,"");

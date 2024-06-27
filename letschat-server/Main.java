@@ -3,10 +3,12 @@ import java.io.FileInputStream;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
 public class Main{
 	static KeyPair keypair;
 	static HashMap<String,User> users;
+	static HashSet<String> online;
 	static Thread now;
 	static final String userFolder="./users";
 	static void setUsers() throws Exception{
@@ -27,6 +29,13 @@ public class Main{
 		now=next;
 		return bef;
 	}
+	
+	static void flushOnline(){
+		System.out.println("当前在线用户有：");
+		for(String name:online)
+			System.out.println("name");
+		System.out.println("");
+	}
 	static void addUser(String name){
 		new Thread(){
 			public void run(){
@@ -34,6 +43,7 @@ public class Main{
 				if(bef!=null) try{
 					bef.join();
 				}catch(InterruptedException e){}
+				online.add(name);
 				System.out.println("addUser"+name);
 				for(String s:users.keySet()) if(!s.equals(name)){
 					System.out.println(s);
@@ -50,6 +60,7 @@ public class Main{
 				if(bef!=null) try{
 					bef.join();
 				}catch(InterruptedException e){}
+				online.remove(name);
 				for(String s:users.keySet()) if(!s.equals(name))
 					users.get(s).removeUser(name);
 			}

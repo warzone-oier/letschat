@@ -65,8 +65,10 @@ public class Captcha{
 		for(int i=0;i<s.length();++i){
 			char a=s.charAt(i),b=get.charAt(i);
 			if(a=='I'||a=='l') a='1';
+			else if(a=='O'||a=='o') a='0';
 			else if('A'<=a&&a<='Z') a=(char)(a-'A'+'a');
 			if(b=='I'||b=='l') b='1';
+			else if(b=='O'||b=='o') b='0';
 			else if('A'<=b&&b<='Z') b=(char)(b-'A'+'a');
 			if(a!=b) return false;
 		}

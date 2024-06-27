@@ -117,16 +117,16 @@ class OnlineUser extends ScrollPanel{
 		friends=new HashMap<String,Friend>();
 	}
 	public void addUser(String name){
-		System.out.println("^^^");
+		//System.out.println("^^^");//调试代码
 		if(friends.get(name)==null){
-			System.out.println(name);
+			//System.out.println(name);//调试代码
 			Friend friend=new Friend(name);
 			friends.put(name,friend);
 			panel.add(friend.visit);
 			ClientMain.mainWindow.frame.setVisible(false);
 			ClientMain.mainWindow.frame.setVisible(true);
 		}
-		System.out.println(">>>");
+		//System.out.println(">>>");//调试代码
 	}
 	public void deleteUser(String name){
 		Friend friend=friends.get(name);
@@ -190,25 +190,18 @@ public class MainWindow extends Thread{
 	public void run(){
 		try{
 			while(true){
-				System.out.println("rrr");
 				byte[] command=ClientMain.server.receive();
 				setPriority(MAX_PRIORITY);
-				System.out.println("rrrr");
 				String sender=ClientMain.server.receiveString();
-				System.out.println(sender);
 				if(command[0]==Network.onlineUser)
 					SwingUtilities.invokeLater(()->onlineUser.addUser(sender));
 				else if(command[0]==Network.offlineUser)
 					SwingUtilities.invokeLater(()->onlineUser.deleteUser(sender));
 				else{
-					System.out.println("...");
 					String text=ClientMain.server.receiveString();
-					System.out.println("....");
 					SwingUtilities.invokeLater(()->onlineUser.sendText(sender,text));
 				}
 				setPriority(5);
-				System.out.println("rrrrrr");
-				
 			}
 		}catch(IOException e){
 			setVisble(false,"");

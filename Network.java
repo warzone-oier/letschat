@@ -78,11 +78,9 @@ public class Network{
 	}
 	/**发送信息，若网络中断则抛出异常*/
 	public void send(byte s[]) throws IOException{
-		System.out.println("iii");
 		if(s.length==1){//单字节不加密
 			output.writeInt(1);
 			output.write(s);
-			System.out.println("ooo");
 			return;
 		}
 		Cipher cipher;
@@ -98,7 +96,6 @@ public class Network{
 		}
 		output.writeInt(code.length);
 		output.write(code);
-		System.out.println("ooo");
 	}
 	/**接收信息，若网络中断则抛出异常*/
 	public byte[] receive() throws IOException{

@@ -45,11 +45,8 @@ public class Main{
 					bef.join();
 				}catch(InterruptedException e){}
 				online.add(name);
-				System.out.println("addUser"+name);
-				for(String s:users.keySet()) if(!s.equals(name)){
-					System.out.println(s);
+				for(String s:users.keySet()) if(!s.equals(name))
 					users.get(s).addUser(name);
-				}
 				flushOnline();
 			}
 		}.start();
@@ -62,8 +59,6 @@ public class Main{
 					bef.join();
 				}catch(InterruptedException e){}
 				online.remove(name);
-				
-				System.out.println("removeUser"+name);
 				for(String s:users.keySet()) if(!s.equals(name))
 					users.get(s).removeUser(name);
 				flushOnline();
